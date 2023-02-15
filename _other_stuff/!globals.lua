@@ -18,6 +18,9 @@ GUILDS_AND_STUFF = {
 	}
 }
 
+local typing = require("type_checking")
+local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
+
 function flush_random()
     math.randomseed(os.time())
     math.random()
@@ -156,36 +159,6 @@ function is_command(obj)
 	return string.sub(tostring(obj), 1, 8) == "COMMAND "
 end
 
----@param obj any
-function is_string(obj)
-    return type(obj) == "string"
-end
-
----@param obj any
-function is_boolean(obj)
-    return type(obj) == "boolean"
-end
-
----@param obj any
-function is_table(obj)
-    return type(obj) == "table"
-end
-
----@param obj any
-function is_number(obj)
-    return type(obj) == "number"
-end
-
----@param obj any
-function is_nil(obj)
-    return type(obj) == "nil"
-end
-
----@param obj any
-function is_function(obj)
-    return type(obj) == "function"
-end
-
 -- TODO whatever this was?
 function string.discord_escape(str)
 	return "```\n"..str.."\n```"
@@ -309,8 +282,9 @@ function sendf(channel, str, ...)
 end
 
 local cnc_guild_id = "373745291289034763"
-local channel_id = "810247445333540894"
 function errmsg(text)
+    local guild_id = "531219831861805067"
+    local channel_id = "1010311107640033301"
     text = tostring(text)
     
     local t = "<@364410374688342018>, script error!\n%s\n%s"
@@ -318,7 +292,7 @@ function errmsg(text)
     text = string.format(t, text, debug.traceback("", 2))
     printf(text)
 
-	local channel = client:getGuild(cnc_guild_id):getChannel(channel_id)
+	local channel = client:getGuild(guild_id):getChannel(channel_id)
 	sendf(channel, text)
 end
 
@@ -352,7 +326,7 @@ end
 ---Validates a Discord message for consumption by Discordia's send function.
 ---@param message Message
 ---@return boolean
----@error Position and description of what is invalid
+---@return string? #Position and description of what is invalid
 function validate_msg(message)
     local has_content = false
 
@@ -403,7 +377,7 @@ end
 ---Validates a Discord message embed for consumption by Discordia's send function.
 ---@param embed table
 ---@return boolean
----@error Position and description of what is invalid
+---@return string? #Position and description of what is invalid
 function validate_embed(embed, prefix)
     prefix = prefix or 'embed'
     local total_size = 0

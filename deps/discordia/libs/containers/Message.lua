@@ -16,7 +16,7 @@ local Resolver = require('client/Resolver')
 local insert = table.insert
 local null = json.null
 local format = string.format
-local messageFlag = enums.messageFlag
+local messageFlag = assert(enums.messageFlag)
 local band, bor, bnot = bit.band, bit.bor, bit.bnot
 
 local Message, get = require('class')('Message', Snowflake)
@@ -41,7 +41,7 @@ function Message:_load(data)
 end
 
 local function parseMentions(content, pattern)
-	if not content:find('%b<>') then return end
+	if not content:find('%b<>') then return {} end
 	local mentions, seen = {}, {}
 	for id in content:gmatch(pattern) do
 		if not seen[id] then
@@ -54,8 +54,10 @@ end
 
 function Message:_loadMore(data)
 
+	local mentions = {}
 	if data.mentions then
 		for _, user in ipairs(data.mentions) do
+			mentions[user.id] = true
 			if user.member then
 				user.member.user = user
 				self._parent._parent._members:_insert(user.member)
@@ -65,10 +67,20 @@ function Message:_loadMore(data)
 		end
 	end
 
+	if data.referenced_message and data.referenced_message ~= null then
+		if mentions[data.referenced_message.author.id] then
+			self._reply_target = data.referenced_message.author.id
+		end
+		self._referencedMessage = self._parent._messages:_insert(data.referenced_message)
+	end
+
 	local content = data.content
 	if content then
 		if self._mentioned_users then
 			self._mentioned_users._array = parseMentions(content, '<@!?(%d+)>')
+			if self._reply_target then
+				insert(self._mentioned_users._array, 1, self._reply_target)
+			end
 		end
 		if self._mentioned_roles then
 			self._mentioned_roles._array = parseMentions(content, '<@&(%d+)>')
@@ -122,10 +134,11 @@ end
 function Message:_removeReaction(d)
 
 	local reactions = self._reactions
+	if not reactions then return nil end
 
 	local emoji = d.emoji
 	local k = emoji.id ~= null and emoji.id or emoji.name
-	local reaction = reactions:get(k)
+	local reaction = reactions:get(k) or nil
 
 	if not reaction then return nil end -- uncached reaction?
 
@@ -174,7 +187,13 @@ end
 must be from 1 to 2000 characters in length.
 ]=]
 function Message:setContent(content)
-	return self:_modify({content = content or null})
+	return self:_modify({
+		content = content or null,
+		allowed_mentions = {
+			parse = {'users', 'roles', 'everyone'},
+			replied_user = not not self._reply_target,
+		},
+	})
 end
 
 --[=[
@@ -238,6 +257,10 @@ function Message:update(data)
 	return self:_modify({
 		content = data.content or null,
 		embed = data.embed or null,
+		allowed_mentions = {
+			parse = {'users', 'roles', 'everyone'},
+			replied_user = not not self._reply_target,
+		},
 	})
 end
 
@@ -375,6 +398,9 @@ function get.mentionedUsers(self)
 	if not self._mentioned_users then
 		local users = self.client._users
 		local mentions = parseMentions(self._content, '<@!?(%d+)>')
+		if self._reply_target then
+			insert(mentions, 1, self._reply_target)
+		end
 		self._mentioned_users = ArrayIterable(mentions, function(id)
 			return users:get(id)
 		end)
@@ -500,7 +526,7 @@ function get.editedTimestamp(self)
 	return self._edited_timestamp
 end
 
---[=[@p oldContent string/table Yields a table containing keys as timestamps and
+--[=[@p oldContent table/nil Yields a table containing keys as timestamps and
 value as content of the message at that time.]=]
 function get.oldContent(self)
 	return self._old
@@ -563,6 +589,12 @@ Equivalent to `Message.guild.members:get(Message.author.id)`.]=]
 function get.member(self)
 	local guild = self.guild
 	return guild and guild._members:get(self._author._id)
+end
+
+--[=[@p referencedMessage Message/nil If available, the previous message that
+this current message references as seen in replies.]=]
+function get.referencedMessage(self)
+	return self._referencedMessage
 end
 
 --[=[@p link string URL that can be used to jump-to the message in the Discord client.]=]

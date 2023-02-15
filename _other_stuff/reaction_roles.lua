@@ -15,6 +15,7 @@ local reactions_to_roles = {
 	boyo = "819603205120983091",
 	siggy = "825129609087025233",
 	settra = "938235392262545410",
+	iamspeed = "1027011599283781712",
 }
 
 
@@ -24,21 +25,22 @@ function get_rules_react_msg()
 		-- color = 0xFF0000,
 		description = "React with the following emojis to get the role! Modders will use these roles to notify peeps who opted-in about progress reports, updates and the such! If you reacted to a previous message, you will keep your roles. To revoke a role, simply remove your reaction!",
 		fields = {
-			{name = "<:pontus:391190040975507466> - CFU", value = "Notifications for Crynsos's Faction Unlocker and similar (<#373754956341313536>)"},
-			{name = "<:grom:373750441844015114> - CTT", value = "Notifications for Cataph\'s Closer to Tabletop mod (<#375747157732491274>)"},
-			{name = "<:caged:385182375270678548> - Cataph Etc.", value = "Notifications for other Cataph things (<#373754902608084994>)"},
-			{name = "<:othonk:446745080704008193> - RPFM", value = "Notifications for Frodo\'s Rusted Pack File Manager (<#498934055564476416>)"},
-			{name = "<:lenny:373750563193618442> - DF", value = "Notifications for DrunkFlamingo\'s work (<#413118111630360597>)"},
-			{name = "<:deadpan:611224582308888578> - Mixu", value = "Notifications for all things Mixu (<#466624302897430530>)"},
-			{name = "<:dab:559762293089370137> - OvN", value = "Notifications for the Old Versus New mods (<#581350078263066665>)"},
-			{name = "<:fuck:469401867991121931> - Vandy", value = "Notifications for Vandy things (<#588478080692256789>)."},
-			{name = "<:slap:690593395730677800> - ER", value = "Notifications for Expanded Rosters (<#614052756944322561>)."},
-			{name = "<:allcomingtogether:652279996110602287> - Jam, not Jelly", value = "Notifications for Mod Jam events, organized by Vandy (<#798557550089601034>)."},
-			{name = "<:skreeee:563696616444264449> - Rigging, Modeling, Animations, Oh My!", value = "Notifications for updates about Phazer's and h3ro's tools - RME (<#707230816887111690>) and the Asset Editor (<#795235087352201226>)."},
-			{name = "<:boyo:436263911973584896> - We'z Speshul", value = "Notifications about the We'z Speshul mod series, by Lost2Insanity (<#743568448369459382>)."},
-			{name = "<:siggy:442243620859412484> - KMM", value = "Notifications for the Kaedrin Mod Manager! (<#482251184980361256>)"},
-			{name = "<:settra:374150074378223618> - Agemouk", value = "Notifications for all things Agemouk! (<#937702185536479272>)"}
-		}
+			{name = "<:pontus:391190040975507466> - CFU", value = "Notifications for Crynsos's Faction Unlocker and similar (<#373754956341313536>)", inline = false,},
+			{name = "<:grom:373750441844015114> - CTT", value = "Notifications for Cataph\'s Closer to Tabletop mod (<#375747157732491274>)", inline = false,},
+			{name = "<:caged:385182375270678548> - Cataph Etc.", value = "Notifications for other Cataph things (<#373754902608084994>)", inline = false,},
+			{name = "<:othonk:446745080704008193> - RPFM", value = "Notifications for Frodo\'s Rusted Pack File Manager (<#498934055564476416>)", inline = false,},
+			{name = "<:lenny:373750563193618442> - DF", value = "Notifications for DrunkFlamingo\'s work (<#413118111630360597>)", inline = false,},
+			{name = "<:deadpan:611224582308888578> - Mixu", value = "Notifications for all things Mixu (<#466624302897430530>)", inline = false,},
+			{name = "<:dab:559762293089370137> - OvN", value = "Notifications for the Old Versus New mods (<#581350078263066665>)", inline = false,},
+			{name = "<:fuck:469401867991121931> - Groove Wizard", value = "Notifications for Groove Wizard things (<#588478080692256789>)."},
+			{name = "<:slap:690593395730677800> - ER", value = "Notifications for Expanded Rosters (<#614052756944322561>).", inline = false,},
+			{name = "<:allcomingtogether:652279996110602287> - Jam, not Jelly", value = "Notifications for Mod Jam events, organized by Groove Wizard (<#798557550089601034>).", inline = false,},
+			{name = "<:skreeee:563696616444264449> - Rigging, Modeling, Animations, Oh My!", value = "Notifications for updates about Phazer's and h3ro's tools - RME (<#707230816887111690>) and the Asset Editor (<#795235087352201226>).", inline = false,},
+			{name = "<:boyo:436263911973584896> - We'z Speshul", value = "Notifications about the We'z Speshul mod series, by Lost2Insanity (<#743568448369459382>).", inline = false,},
+			{name = "<:siggy:442243620859412484> - KMM", value = "Notifications for the Kaedrin Mod Manager! (<#482251184980361256>)", inline = false,},
+			{name = "<:settra:374150074378223618> - Agemouk", value = "Notifications for all things Agemouk! (<#937702185536479272>)", inline = false,},
+			{name = "<:iamspeed:1024702728276029520> - Skeleton Crew", value = "Notifications for the Skeleton Crew mods! (<#1008765251208089660>)", inline = false,},
+		},
 	}
 end
 

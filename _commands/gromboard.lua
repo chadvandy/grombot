@@ -1,3 +1,10 @@
+local discordia = require("discordia")
+local client = discordia.storage.client
+
+local typing = require("type_checking")
+local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
+local log_me = require("logging").log_me
+
 --- A system for Gromby to collect transmissions, so shit doesn't easily get lost in #moddr_team_up or any of the #modding_tech channels.
 --- Start off with #moddr_team_up:
     -- Two modes - submitting offers, and submitting requests

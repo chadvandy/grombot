@@ -265,8 +265,8 @@ end)
 
 
 local q_formatted = {
-	"Wazzock, you really want to ask me %q?",
-	"I am compelled to answer your question, %q...",
+	"Wazzock, you really want to ask me that?",
+	"I am compelled by Grungni to answer your question.",
 }
 
 local answers = {
@@ -321,6 +321,10 @@ ask_grom:set_trigger("message", "ask_grom")
 ask_grom:set_category("Goof")
 ask_grom:set_argument_parser(
 	function (message, args)
+		local channel = message.channel
+		if channel.id ~= "810247445333540894" then
+			return false, "You can only use this command in <#810247445333540894>."
+		end
 		local q = table.concat(args, " ")
 		if q == "" then
 			return false, "C'mon, ask me a question!"

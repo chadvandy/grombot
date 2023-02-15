@@ -1,5 +1,8 @@
 print("requiring CM")
 
+local typing = require("type_checking")
+local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
+
 ---@class command_manager
 ---@field _commands table<string, command>
 ---@field _triggers table<string, string>

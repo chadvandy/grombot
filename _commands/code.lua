@@ -1,4 +1,4 @@
----- Arbitrarily run code. Can ONLY BE USED by Vandy!
+---- Arbitrarily run code. Can ONLY BE USED by moi!
 
 local code = CM:new_command(
     "code",
@@ -50,7 +50,7 @@ local code = CM:new_command(
     end
 )
 code:set_name("Arbitrary Code")
-code:set_description("Arbitrarily run any code. Vandy only :)")
+code:set_description("Arbitrarily run any code. Groove Wizard only :)")
 code:set_category("Admin")
 code:set_trigger("message", "code")
 code:set_usage("`%scode local code = do_stuff code()`")
@@ -59,7 +59,7 @@ code:set_validity_check(
     function(member)
         local user = member.user
         if user.id ~= client.owner.id then
-            return false, "Only Vandy can use this!"
+            return false, "Only Groove Wizard can use this!"
         end
 
         return true

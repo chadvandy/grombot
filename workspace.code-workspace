@@ -8,5 +8,6 @@
 		"Lua.workspace.checkThirdParty": false,
 		"todo-tree.regex.regex": "((//|#|--\\[*|;|/\\*|^)\\s*($TAGS)|^\\s*- \\[ \\])",
 		"Lua.runtime.version": "LuaJIT",
+		"Lua.diagnostics.workspaceRate": 30
 	}
 }

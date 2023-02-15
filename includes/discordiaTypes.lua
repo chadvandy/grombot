@@ -532,7 +532,7 @@ function GuildCategoryChannel:createVoiceChannel(name) end
 function GuildCategoryChannel:__init() end
 
 ---Represents a text channel in a Discord guild, where guild members and webhooks can send and receive messages.
----@class GuildTextChannel: GuildChannel: TextChannel
+---@class GuildTextChannel: GuildChannel, TextChannel
 ---@field public topic string | nil The channel's topic. This should be between 1 and 1024 characters.
 ---@field public nsfw boolean Whether this channel is marked as NSFW (not safe for work).
 ---@field public rateLimit number Slowmode rate limit per guild member.

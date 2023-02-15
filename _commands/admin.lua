@@ -119,32 +119,28 @@ function check_admin()
 			local admin_id = data.admin
 			local user_id = data.victim
 
+			
 			local guild = client:getGuild(guild_id)
-
+			
 			printf("Trying to get user with ID %s", user_id)
 			local member = guild:getMember(user_id)
+			printf("Trying to get admin with I %s", admin_id)
+			local admin = guild:getMember(admin_id)
 
-			if not member then
-				--- This member quit - don't do anything!
-			else
-				printf("Trying to get admin with ID %s", admin_id)
-				local admin = guild:getMember(admin_id)
-	
-				local punishment_type = data.type
-	
-				if punishment_type == "mute" then
-					if not CLASS.isInstance(member, CLASS.classes.Member) then
-						-- not a member!
-						return
-					end
-	
-					member:removeRole(mute_role_id)
-	
-					admin_operation_notify("unmute", member, admin, "Mute timeout!", nil, nil)
-	
-				elseif punishment_type == "ban" then
-					guild:unbanUser(user_id, "Temporary ban ended.")
+			local punishment_type = data.type
+
+			if punishment_type == "mute" then
+				if not CLASS.isInstance(member, CLASS.classes.Member) then
+					-- not a member!
+					return
 				end
+
+				member:removeRole(mute_role_id)
+
+				admin_operation_notify("unmute", member, admin, "Mute timeout!", nil, nil)
+
+			elseif punishment_type == "ban" then
+				guild:unbanUser(user_id, "Temporary ban ended.")
 			end
 		else
 			new_t[#new_t+1] = data
@@ -237,7 +233,6 @@ local function arg_parser(message, args, get_time)
         return false, "You have to @mention a member to use this command!"
     end
 
-	
 	local content = table.concat(args, " ")
 	printf("Content %q", content)
 
@@ -253,9 +248,10 @@ local function arg_parser(message, args, get_time)
 		ret_args.members[#ret_args.members+1] = member
 
 		local mentioned_str = mentioned_user.mentionString
+		mentioned_str = mentioned_str:gsub("<@", "<@!", 1)
 		print("Mentioned str: " .. mentioned_str)
 
-		for j = #args, 1, -1 do
+		for j = 1, #args do
 			local arg = args[j]
 			if arg == mentioned_str then
 				table.remove(args, j)
