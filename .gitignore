@@ -1,4 +1,7 @@
+#The secret token of Gromby. No steal.
 .token
+
+#Logs and DB files.
 discordia.log
 gateway.json
 json/
