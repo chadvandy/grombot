@@ -53,14 +53,14 @@ function Command:set_description(description)
     return self
 end
 
---- TODO enumerated!
-function Command:set_type(type)
-    type = InteractionManager:is_enum("ApplicationCommandTypes", type)
-	if not type then
+---@param intType ApplicationCommandTypes
+function Command:set_type(intType)
+    local i = InteractionManager:is_enum("ApplicationCommandTypes", intType)
+	if not i then
 		error("type must not be nil")
 	end
 
-	self.payload.type = type
+	self.payload.type = i
 	return self
 end
 
@@ -94,6 +94,17 @@ end
 ---@param int Interaction
 function Command:process(int, args)
     self.callback(int, args)
+end
+
+function Command:get_payload()
+    local payload = self.payload
+    payload.options = {}
+    local options = self.options
+    for i, option in ipairs(options) do
+        payload.options[i] = option.payload
+    end
+
+    return payload
 end
 
 return Command

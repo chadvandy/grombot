@@ -45,12 +45,12 @@ function CommandOption:set_description(description)
     return self
 end
 
---- TODO enumerated!
-function CommandOption:set_type(type)
-    type = InteractionManager:is_enum("ApplicationCommandOptionTypes", type)
-    assert(type, "Invalid type: " .. tostring(type))
+---@param intType ApplicationCommandOptionTypes
+function CommandOption:set_type(intType)
+    local i = InteractionManager:is_enum("ApplicationCommandOptionTypes", intType)
+    assert(intType, "Invalid type: " .. tostring(intType))
 
-	self.payload.type = type
+	self.payload.type = i
 	return self
 end
 

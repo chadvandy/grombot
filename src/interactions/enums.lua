@@ -1,3 +1,6 @@
+---@alias ApplicationCommandTypes "CHAT_INPUT"|"USER"|"MESSAGE"
+---@alias ApplicationCommandOptionTypes "SUB_COMMAND"|"SUB_COMMAND_GROUP"|"STRING"|"INTEGER"|"BOOLEAN"|"USER"|"CHANNEL"|"ROLE"|"MENTIONABLE"|"NUMBER"|"ATTACHMENT"
+
 local enums = {
     ApplicationCommandTypes = {
         [1] = "CHAT_INPUT",

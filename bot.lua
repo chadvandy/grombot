@@ -24,8 +24,7 @@ discordia.extensions()
 
 function _G.env_require(path, env)
 	if not env then env = getfenv(1) end
-	local f = assert(loadfile(path))
-	setfenv(f, env)
+	local f = assert(loadfile(path, "bt", getfenv(1)))
 	return f()
 end
 
@@ -38,16 +37,15 @@ print("NewClass is: "..tostring(NewClass))
 ENUMS = discordia.enums
 CLASS = discordia.class
 EMITTER = discordia.Emitter
-FS = require("fs")
-JSON = require("json")
-TIMER = require("timer")
--- RESOLVER = require("deps.discordia.libs.client.Resolver")
-local http = require("coro-http")
+
+_G.FS = require("fs")
+_G.JSON = require("json")
+_G.TIMER = require("timer")
+_G.http = require("coro-http")
 
 
 -- TODO hook in configuration stuff
 CONFIG = FS.readFileSync(".config")
-TOKEN = FS.readFileSync(".token")
 
 local function other_stuff(file)
 	return env_require("_other_stuff/"..file..".lua")
@@ -353,4 +351,4 @@ client:on("voiceChannelLeave",
 	end
 )
 
-client:run('Bot ' .. tostring(TOKEN))
+client:run('Bot ' .. tostring(FS.readFileSync(".token")))

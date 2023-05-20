@@ -21,8 +21,9 @@ GUILDS_AND_STUFF = {
 local typing = require("type_checking")
 local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
 
-function flush_random()
+function _G.flush_random()
     math.randomseed(os.time())
+    
     math.random()
     math.random()
     math.random()
@@ -282,7 +283,7 @@ function sendf(channel, str, ...)
 end
 
 local cnc_guild_id = "373745291289034763"
-function errmsg(text)
+function _G.errmsg(text)
     local guild_id = "531219831861805067"
     local channel_id = "1010311107640033301"
     text = tostring(text)

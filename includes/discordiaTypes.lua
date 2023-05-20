@@ -172,7 +172,7 @@ function Webhook:__init() end
 local Client = {}
 ---Authenticates the current user via HTTPS and launches as many WSS gateway shards as are required or requested. By using coroutines that are automatically managed by Luvit libraries and a libuv event loop, multiple clients per process and multiple shards per client can operate concurrently. This should be the last method called after all other code and event handlers have been initialized. If a presence table is provided, it will act as if the user called `setStatus` and `setGame` after `run`.
 ---@param token string
----@param presence table
+---@param presence table|nil
 ---@return nil
 function Client:run(token, presence) end
 ---Disconnects all shards and effectively stop their loops. This does not empty any data that the client may have cached.
