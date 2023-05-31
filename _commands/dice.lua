@@ -239,29 +239,29 @@ end
 
 ---@class dice_args
 
--- TODO better +/-; allow for "roll 1d6+6" instead of needing the space
+-- -- TODO better +/-; allow for "roll 1d6+6" instead of needing the space
 
--- arg1: XdY, where X is the number of dice, and Y is the highest number on the die
--- arg2: +/-N, where N is an arbitrary number to add or subtract from the end result
----@param args dice_args
----@param message Message
-CM:new_command("roll", function (message, args)
-	flush()
+-- -- arg1: XdY, where X is the number of dice, and Y is the highest number on the die
+-- -- arg2: +/-N, where N is an arbitrary number to add or subtract from the end result
+-- ---@param args dice_args
+-- ---@param message Message
+-- CM:new_command("roll", function (message, args)
+-- 	flush()
 
-	---@type dice_bowl
-	local pool = args.pool
+-- 	---@type dice_bowl
+-- 	local pool = args.pool
 
-	local res,str = pool:roll()
+-- 	local res,str = pool:roll()
 
-	message.channel:send("Rolled a " .. res .. ".\n\n"..str)
-end)
-:set_name("Roll the Dice:tm:")
-:set_description("A randomized dice roller! Handles any types of dice or any number of dice - up to a point!")
-:set_usage("`%sroll XdY +N`, where X is the number of dice, Y is the number of faces on the die, and N is any addition to perform after the fact. Assumes 1d6 if nothing is provided.")
-:set_category("Utility")
-:set_argument_parser(parse_args)
-:set_trigger("message", "roll")
-:set_trigger("message", "dice")
+-- 	message.channel:send("Rolled a " .. res .. ".\n\n"..str)
+-- end)
+-- :set_name("Roll the Dice:tm:")
+-- :set_description("A randomized dice roller! Handles any types of dice or any number of dice - up to a point!")
+-- :set_usage("`%sroll XdY +N`, where X is the number of dice, Y is the number of faces on the die, and N is any addition to perform after the fact. Assumes 1d6 if nothing is provided.")
+-- :set_category("Utility")
+-- :set_argument_parser(parse_args)
+-- :set_trigger("message", "roll")
+-- :set_trigger("message", "dice")
 
 
 local q_formatted = {

@@ -218,16 +218,16 @@ function table.random_sort(t)
     return ret
 end
 
---- Pack any vararg with all parameters stored into arrayed keys.
----@vararg any
-function table.pack(...)
-	return { n = select("#", ...), ... }
-end
+-- --- Pack any vararg with all parameters stored into arrayed keys.
+-- ---@vararg any
+-- function table.pack(...)
+-- 	return { n = select("#", ...), ... }
+-- end
 
 --- Acts as "pairs()" but automatically sorts a table by keys, in alphabetical order.
 ---@param t table<string, any> The table to iterate!
 ---@param func function|nil An optional function to sort by,
-function pairs_by_keys(t, func)
+function _G.pairs_by_keys(t, func)
     local ordered_keys = {}
     for key,_ in pairs(t) do ordered_keys[#ordered_keys+1] = key end
     table.sort(ordered_keys, func)
@@ -263,26 +263,130 @@ function safe_format(str, ...)
 end
 
 ---@param str string
----@vararg string
+---@vararg any
 function printf(str, ...)
 	local str, err = safe_format(str, ...)
 	print(str)
 	if err then errmsg(err) end
 end
 
----@param channel TextChannel
+---@param channel TextChannel|GuildChannel|GuildTextChannel
 ---@param str string
 ---@vararg string
 function sendf(channel, str, ...)
     if not CLASS.isInstance(channel, CLASS.classes.TextChannel) then return end
 
 	local str, err = safe_format(str, ...)
-	channel:send(str)
-
 	if err then errmsg(err) end
+	local ok, err = channel:send(str)
+
+    if not ok then errmsg(err) end
 end
 
-local cnc_guild_id = "373745291289034763"
+
+--- @param t table
+--- @param ignored_fields table<string>
+--- @param loop_value number
+--- @return table<string>
+local function inner_loop_fast_print(t, ignored_fields, loop_value)
+    --- @type table<any>
+	local table_string = {'{\n'}
+	--- @type table<any>
+	local temp_table = {}
+    for key, value in pairs(t) do
+        table_string[#table_string + 1] = string.rep('\t', loop_value + 1)
+
+        if type(key) == "string" then
+            table_string[#table_string + 1] = '["'
+            table_string[#table_string + 1] = key
+            table_string[#table_string + 1] = '"] = '
+        elseif type(key) == "number" then
+            table_string[#table_string + 1] = '['
+            table_string[#table_string + 1] = key
+            table_string[#table_string + 1] = '] = '
+        else
+            table_string[#table_string + 1] = '['
+            table_string[#table_string + 1] = tostring(key)
+            table_string[#table_string + 1] = '] = '
+        end
+
+		if type(value) == "table" then
+			temp_table = inner_loop_fast_print(value, ignored_fields, loop_value + 1)
+			for i = 1, #temp_table do
+				table_string[#table_string + 1] = temp_table[i]
+			end
+		elseif type(value) == "string" then
+			table_string[#table_string + 1] = '[=['
+			table_string[#table_string + 1] = value
+			table_string[#table_string + 1] = ']=],\n'
+		else
+			table_string[#table_string + 1] = tostring(value)
+			table_string[#table_string + 1] = ',\n'
+		end
+    end
+
+	table_string[#table_string + 1] = string.rep('\t', loop_value)
+    table_string[#table_string + 1] = "},\n"
+
+    return table_string
+end
+
+--- @param t table
+--- @param ignored_fields table<string>?
+--- @return string|boolean
+function _G.fast_print(t, ignored_fields)
+    if not (type(t) == "table") then
+        return "false"
+    end
+
+    --- @type table<any>
+    local table_string = {'{\n'}
+	--- @type table<any>
+	local temp_table = {}
+
+    for key, value in pairs(t) do
+
+        table_string[#table_string + 1] = string.rep('\t', 1)
+        if type(key) == "string" then
+            table_string[#table_string + 1] = '["'
+            table_string[#table_string + 1] = key
+            table_string[#table_string + 1] = '"] = '
+        elseif type(key) == "number" then
+            table_string[#table_string + 1] = '['
+            table_string[#table_string + 1] = key
+            table_string[#table_string + 1] = '] = '
+        else
+            --- TODO skip it somehow?
+            table_string[#table_string + 1] = '['
+            table_string[#table_string + 1] = tostring(key)
+            table_string[#table_string + 1] = '] = '
+        end
+
+        if type(value) == "table" then
+            temp_table = inner_loop_fast_print(value, ignored_fields, 1)
+            for i = 1, #temp_table do
+                table_string[#table_string + 1] = temp_table[i]
+            end
+        elseif type(value) == "string" then
+            table_string[#table_string + 1] = '[=['
+            table_string[#table_string + 1] = value
+            table_string[#table_string + 1] = ']=],\n'
+        elseif type(value) == "boolean" or type(value) == "number" then
+            table_string[#table_string + 1] = tostring(value)
+            table_string[#table_string + 1] = ',\n'
+        else
+            -- unsupported type, technically.
+            table_string[#table_string+1] = "nil,\n"
+        end
+    end
+
+    table_string[#table_string + 1] = "}\n"
+
+    return table.concat(table_string)
+end
+
+local private_channel
+local _gId, _cId = "531219831861805067", "1010311107640033301"
 function _G.errmsg(text)
     local guild_id = "531219831861805067"
     local channel_id = "1010311107640033301"
@@ -293,6 +397,19 @@ function _G.errmsg(text)
     text = string.format(t, text, debug.traceback("", 2))
     printf(text)
 
+    if not private_channel then
+        private_channel = client:getGuild(_gId):getChannel(_cId)
+    end
+
+	sendf(private_channel, text)
+end
+
+function _G.inform(text)
+    local guild_id = "531219831861805067"
+    local channel_id = "1010311107640033301"
+    
+    text = string.format("<@364410374688342018>\n%s", tostring(text))
+    
 	local channel = client:getGuild(guild_id):getChannel(channel_id)
 	sendf(channel, text)
 end
@@ -379,7 +496,7 @@ end
 ---@param embed table
 ---@return boolean
 ---@return string? #Position and description of what is invalid
-function validate_embed(embed, prefix)
+function _G.validate_embed(embed, prefix)
     prefix = prefix or 'embed'
     local total_size = 0
 
@@ -573,8 +690,8 @@ function validate_embed(embed, prefix)
 
             if type(field.name) ~= 'string' then
                 return false, prefix .. '.fields[' .. i .. '].name: wrong type (expected string, got ' .. type(field.name) .. ')'
-            elseif utf8.len(field.name) < 1 then
-                return false, prefix .. '.fields[' .. i .. '].name: too small (' .. utf8.len(field.name) .. ' < 1)'
+            elseif utf8.len(field.name) < 0 then
+                return false, prefix .. '.fields[' .. i .. '].name: too small (' .. utf8.len(field.name) .. ' < 0)'
             elseif utf8.len(field.name) > 256 then
                 return false, prefix .. '.fields[' .. i .. '].name: too large (' .. utf8.len(field.name) .. ' > 256)'
             end
@@ -583,8 +700,8 @@ function validate_embed(embed, prefix)
 
             if type(field.value) ~= 'string' then
                 return false, prefix .. '.fields[' .. i .. '].value: wrong type (expected string, got ' .. type(field.value) .. ')'
-            elseif utf8.len(field.value) < 1 then
-                return false, prefix .. '.fields[' .. i .. '].value: too small (' .. utf8.len(field.value) .. ' < 1)'
+            elseif utf8.len(field.value) < 0 then
+                return false, prefix .. '.fields[' .. i .. '].value: too small (' .. utf8.len(field.value) .. ' < 0)'
             elseif utf8.len(field.value) > 1024 then
                 return false, prefix .. '.fields[' .. i .. '].value: too large (' .. utf8.len(field.value) .. ' > 1024)'
             end

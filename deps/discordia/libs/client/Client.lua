@@ -100,7 +100,7 @@ local function parseOptions(customOptions)
 	end
 end
 
----@type Client
+---@class Client
 local Client, get = require('class')('Client', Emitter)
 
 function Client:__init(options)
@@ -108,6 +108,8 @@ function Client:__init(options)
 	options = assert(parseOptions(options))
 	self._options = options
 	self._shards = {}
+
+	---@type discordia.API
 	self._api = API(self)
 	self._mutex = Mutex()
 	self._users = Cache({}, User, self)

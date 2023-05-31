@@ -17,7 +17,7 @@ local footer_string = "Page %d of %d"
 
 --- Create a new Prompt.
 ---@param key string
----@param channel GuildTextChannel
+---@param channel TextChannel
 ---@return prompt
 function Prompt.new(key, channel)
     if not is_string(key) then return error("Tried to call a new Prompt, but the key provided wasn't a string!") end
@@ -29,7 +29,7 @@ function Prompt.new(key, channel)
 
     o._key = key
 
-    ---@type GuildTextChannel
+    ---@type TextChannel
     o._channel = channel
 
     o._users = {}

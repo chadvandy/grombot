@@ -1,7 +1,10 @@
 --- TODO command wrapper object. Payload data w/ methods and etc.
 --- Slash Commands
 
+---@type discordia
 local discordia = require("discordia")
+
+---@type Client
 local client = discordia.storage.client
 
 local typing = require("type_checking")
@@ -19,6 +22,21 @@ local defaults = {
 
     ---@type CommandOption[]
     options = {},
+
+    ---@type SubcommandGroup[]
+    subcommand_groups = {},
+
+    ---@type Command[]
+    subcommands = {},
+
+    is_holder = false,
+
+    is_global = false,
+
+    is_testing = false,
+
+    ---@type string[]
+    guilds = {"531219831861805067"},
 }
 
 ---@class Command : Class
@@ -45,6 +63,59 @@ function Command:set_name(name)
     return self
 end
 
+function Command:dev(b)
+    if b == false then
+        self.is_testing = true
+
+        self.is_global = true
+        self.guilds = {}
+    else
+        self.is_testing = true
+    
+        self.is_global = false
+        self.guilds = {"531219831861805067"}
+    end
+end
+
+--- Call :deploy() when any changes are made to a command's parameters.
+---@param is_global any
+---@param guilds any
+function Command:deploy(is_global, guilds)
+    
+end
+
+function Command:set_global(b)
+    if is_nil(b) then b = true end
+
+    if not is_boolean(b) then return end
+
+    self.is_global = b
+end
+
+function Command:get_global() return self.is_global end
+
+function Command:set_guilds(t)
+
+end
+
+function Command:get_guilds()
+    return self.guilds
+end
+
+function Command:add_to_guild(gId)
+    if not is_string(gId) then return end
+
+    local guild = client:getGuild(gId)
+    if not guild then
+        return
+    end
+
+    self.guilds[#self.guilds+1] = gId
+
+    if InteractionManager.is_init then
+        InteractionManager:add_command_to_guild(self, gId)
+    end
+end
 
 function Command:set_description(description)
     assert(is_string(description), "")
@@ -53,7 +124,7 @@ function Command:set_description(description)
     return self
 end
 
----@param intType ApplicationCommandTypes
+---@param intType ApplicationCommandTypes|number
 function Command:set_type(intType)
     local i = InteractionManager:is_enum("ApplicationCommandTypes", intType)
 	if not i then
@@ -84,6 +155,52 @@ function Command:create_option(name, description)
     return opt
 end
 
+---@return SubcommandGroup
+function Command:add_subcommand_group(name, desc)
+    local o = InteractionManager.SubcommandGroup:new(name, desc)
+
+    self.is_holder = true
+
+    self.subcommand_groups[#self.subcommand_groups+1] = o
+
+    return o
+end
+
+function Command:add_subcommand(name, desc)
+    local o = InteractionManager.Command:new(name, desc)
+    o:set_type(1)
+
+    self.is_holder = true
+
+    self.subcommands[#self.subcommands+1] = o
+
+    return o
+end
+
+function Command:get_subcommand_group(name)
+    for _, subcommand_group in ipairs(self.subcommand_groups) do
+        if subcommand_group.payload.name == name then
+            return subcommand_group
+        end
+    end
+end
+
+function Command:get_subcommand(name)
+    for _, subcommand in ipairs(self.subcommands) do
+        if subcommand.payload.name == name then
+            return subcommand
+        end
+    end
+end
+
+function Command:get_option(k)
+    for i,opt in ipairs(self.options) do
+        if opt.payload.name == k then
+            return opt
+        end
+    end
+end
+
 ---@param t CommandOption
 function Command:add_option(t)
     assert(is_option(t))
@@ -100,8 +217,16 @@ function Command:get_payload()
     local payload = self.payload
     payload.options = {}
     local options = self.options
-    for i, option in ipairs(options) do
-        payload.options[i] = option.payload
+    for _, option in ipairs(options) do
+        payload.options[#payload.options+1] = option:get_payload()
+    end
+
+    for _, subcommand_group in ipairs(self.subcommand_groups) do
+        payload.options[#payload.options+1] = subcommand_group:get_payload()
+    end
+
+    for _, subcommand in ipairs(self.subcommands) do
+        payload.options[#payload.options+1] = subcommand:get_payload()
     end
 
     return payload

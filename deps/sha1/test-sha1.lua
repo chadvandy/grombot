@@ -1,5 +1,5 @@
 
-local sha1 = require('./init')
+local sha1 = require('src.interactions.option.subcommand_groupp.init')
 assert(sha1("") == "da39a3ee5e6b4b0d3255bfef95601890afd80709")
 assert(sha1("abc") == "a9993e364706816aba3e25717850c26c9cd0d89d")
 assert(sha1("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")

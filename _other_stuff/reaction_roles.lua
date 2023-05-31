@@ -45,7 +45,7 @@ function get_rules_react_msg()
 end
 
 ---comment
----@param reaction Reaction
+---@param reaction Reaction?
 ---@param userId string
 function role_add_command(reaction, userId, hash, channel)
 	printf("Adding role")

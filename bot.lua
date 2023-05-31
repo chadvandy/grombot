@@ -1,11 +1,9 @@
 ---@type discordia
-local discordia = require('discordia')
+_G.discordia = require('discordia')
 -- require("discordia-interactions") -- Modifies Discordia and adds interactionCreate event
 dslash = require("discordia-slash") -- Modifies Discordia and adds interactionCreate event
 
 package.path = package.path .. ";?.lua;?/init.lua"
-
-local intrType = discordia.enums.interactionType
 
 ---@type Client
 client = discordia.Client(
@@ -17,8 +15,8 @@ client:enableAllIntents()
 discordia.storage.client = client
 
 client:useApplicationCommands()
-dslash.util.appcmd(client, "531219831861805067")
-dslash.util.appcmd(client, "373745291289034763")
+-- dslash.util.appcmd(client, "531219831861805067")
+-- dslash.util.appcmd(client, "373745291289034763")
 
 discordia.extensions()
 
@@ -34,9 +32,10 @@ local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = t
 NewClass = require "../30-log"
 _G.NewClass = NewClass
 print("NewClass is: "..tostring(NewClass))
-ENUMS = discordia.enums
-CLASS = discordia.class
-EMITTER = discordia.Emitter
+
+_G.ENUMS = discordia.enums
+_G.CLASS = discordia.class
+_G.EMITTER = discordia.Emitter
 
 _G.FS = require("fs")
 _G.JSON = require("json")
@@ -56,8 +55,6 @@ prefix = "?"
 
 other_stuff("!globals")
 
-local my_class = NewClass("Test", {})
-
 ---@type ticket_manager
 TM = other_stuff("ticket_manager")
 
@@ -68,7 +65,7 @@ PM = other_stuff("prompt_manager")
 CM = other_stuff("command_manager")
 
 
-saved_data = {
+_G.saved_data = {
 	reminders = {},
 	admin_table = {},
 	macros = {},
@@ -228,10 +225,10 @@ end
 ---@type InteractionManager
 local InteractionManager = require("./src/interactions")
 
-client:once('ready', function()
-	-- client:setGame(string.format("100%% Lua, baby. Prefix is %q.", prefix))
-	client:setActivity({name="Cruisin' on the Karaz Ankor"})
+require ("./src/macros/init")
 
+client:once('ready', function()
+	client:setActivity({name="the cries of grobi.", type = ENUMS.activityType.listening})
 	-- read the read files
 	load_saved_data()
 
@@ -282,7 +279,6 @@ client:on("reactionAdd", function(reaction, userId)
 end)
 
 client:on("reactionAddUncached", function(channel, messageId, hash, userId)
-	printf("Reaction added on uncached msg, hash is %q", hash)
 	if messageId == reaction_message_id then
 		role_add_command(nil, userId, hash, channel)
 	end
@@ -306,7 +302,63 @@ client:on(
 	---@param cmd table
 	---@param args table
 	function(int, cmd, args)
-		InteractionManager:process_interaction(int, cmd, args)
+		InteractionManager:process_slash_command(int, cmd, args)
+	end
+)
+
+client:on(
+	"slashCommandAutocomplete",
+	---@param int Interaction
+	---@param data table
+	---@param focused_option CommandOption
+	---@param args table
+	function (int, data, focused_option, args)
+		print("Slash command autocomplete!") 
+		InteractionManager:process_autocomplete(int, data, focused_option, args)
+	end
+)
+
+client:on(
+	"modalSubmit",
+	---@param int Interaction
+	---@param data table
+	---@param args table
+	function(int, data, args)
+		InteractionManager:process_modal(int, data, args)
+	end
+)
+
+client:on(
+	"messageCommand",
+	---@param int Interaction
+	---@param data table
+	---@param msg Message
+	function(int, data, msg)
+		int:editReply("Received your input!")
+	end
+)
+
+client:on(
+	"messageComponentInteraction",
+	---@param int Interaction
+	---@param data table
+	---@param values table<string, any>?
+	function(int, data, values)
+		local custom_id = data.custom_id
+
+		if custom_id then
+			InteractionManager:process_component(int, data)
+		end
+	end
+)
+
+client:on(
+	"userCommand",
+	---@param int Interaction
+	---@param data table
+	---@param member Member
+	function(int, data, member)
+
 	end
 )
 

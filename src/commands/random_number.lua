@@ -11,6 +11,9 @@ local log_me = require("logging").log_me
 
 local Command = InteractionManager:new_command("random_number", "Generate random number[s] for use in TW databases.", "CHAT_INPUT")
 
+Command.id = "1109525548906057859"
+Command.is_global = true
+
 local o = Command:create_option("num", "How many random numbers do you need?")
 o:set_type("INTEGER")
 o:set_min_value(1)

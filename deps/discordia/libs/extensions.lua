@@ -23,6 +23,7 @@ local rep, find, sub = string.rep, string.find, string.sub
 local min, max, random = math.min, math.max, math.random
 local ceil, floor = math.ceil, math.floor
 
+---@class tablelib
 local table = {}
 
 function table.count(tbl)
@@ -129,6 +130,29 @@ function table.slice(tbl, start, stop, step)
 	return ret
 end
 
+---@param t table
+---@param fn_filter fun(val: any, key: any, t: table):boolean|nil
+---@param max_i number?
+---@return table
+function table.filter(t, fn_filter, max_i)
+	local ret = {}
+
+	if type(max_i) == "nil" then max_i = math.huge end
+	local i = 0
+
+	for k,v in pairs(t) do
+		if fn_filter(v, k, t) == true then
+			i = i + 1
+			if i > max_i then break end
+
+			ret[k] = v
+		end
+	end
+
+	return ret
+end
+
+---@class stringlib
 local string = {}
 
 function string.split(str, delim)
@@ -221,6 +245,7 @@ function string.random(len, mn, mx)
 	return concat(ret)
 end
 
+---@class mathlib
 local math = {}
 
 function math.clamp(n, minValue, maxValue)

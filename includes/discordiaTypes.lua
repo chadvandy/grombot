@@ -236,9 +236,9 @@ function Client:getApplicationInformation() end
 ---@return nil
 function Client:setStatus(status) end
 ---Sets the current users's game on all shards that are managed by this client. If a string is passed, it is treated as the game name. If a table is passed, it must have a `name` field and may optionally have a `url` or `type` field. Pass `nil` to remove the game status.
----@param game string | table
+---@param act string | {name:string, url:string?, type:string?}
 ---@return nil
-function Client:setGame(game) end
+function Client:setActivity(act) end
 ---Set the current user's AFK status on all shards that are managed by this client. This generally applies to user accounts and their push notifications.
 ---@param afk boolean
 ---@return nil

@@ -3,16 +3,18 @@ local client = discordia.storage.client
 
 ---@type InteractionManager
 local InteractionManager = discordia.storage.InteractionManager
-local Command = InteractionManager.Command
 
 local typing = require("type_checking")
 local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
 local log_me = require("logging").log_me
 
 
-local Roll = InteractionManager:new_command("roll", "Roll some bones y'all!", "CHAT_INPUT")
+local Command = InteractionManager:new_command("roll", "Roll some bones y'all!", "CHAT_INPUT")
 
-local pool = Roll:create_option("dice_pool", "The number of dice to roll!")
+Command.id = "1029879590929309756"
+Command.is_global = true
+
+local pool = Command:create_option("dice_pool", "The number of dice to roll!")
 pool:set_type("INTEGER")
 pool:set_required(true)
 pool:set_max_value(100)
@@ -20,19 +22,19 @@ pool:set_min_value(1)
 
 do
     --- TODO use option choies? ie., d4, d6, d8, d10, dF, etc.
-    local num_faces = Roll:create_option("num_faces", "The number of faces for each die!")
+    local num_faces = Command:create_option("num_faces", "The number of faces for each die!")
     num_faces:set_type("INTEGER")
     num_faces:set_required(true)
 
-    local modifier = Roll:create_option("modifier", "A number to modify the end result by - ex., +1 or -6.")
+    local modifier = Command:create_option("modifier", "A number to modify the end result by - ex., +1 or -6.")
     modifier:set_type("INTEGER")
-    modifier:set_required(true)
+    modifier:set_required(false)
 
-    local num_keep = Roll:create_option("num_keep", "The number of die to keep from the pool!")
+    local num_keep = Command:create_option("num_keep", "The number of die to keep from the pool!")
     num_keep:set_type("INTEGER")
     num_keep:set_required(false)
 
-    local keep_highest = Roll:create_option("keep_highest", "Keep the highest dice, if any are discarded. False to keep the lowest.")
+    local keep_highest = Command:create_option("keep_highest", "Keep the highest dice, if any are discarded. False to keep the lowest.")
     keep_highest:set_type("BOOLEAN")
     keep_highest:set_required(false)
 end
@@ -68,7 +70,7 @@ local function roll(i, f)
     return res
 end
 
-Roll:set_callback(function(int, args)
+Command:set_callback(function(int, args)
     local num_dice = args.dice_pool
     local num_faces = args.num_faces
     local mod = args.modifier
@@ -135,6 +137,6 @@ Roll:set_callback(function(int, args)
     int:reply(str)
 end)
 
-return Roll
+return Command
 
 -- log_me(client:createGlobalApplicationCommand(payload))

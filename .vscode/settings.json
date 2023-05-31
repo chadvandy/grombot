@@ -3,5 +3,8 @@
         "lowercase-global",
         "different-requires"
     ],
-    "Lua.runtime.version": "LuaJIT"
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.workspace.library": [
+        "/root/.vscode-server/extensions/sumneko.lua-3.6.20-linux-x64/server/meta/198e70ed"
+    ]
 }

@@ -13,6 +13,9 @@ local log_me = require("logging").log_me
 
 local Command = InteractionManager:new_command("regen_guid", "Regenerate GUIDs within a .twui.xml file!", "CHAT_INPUT")
 
+Command.is_global = true
+Command.id = "1109528588744654899"
+
 local o = Command:create_option("file", ".twui.xml file to regenerate!")
 o:set_type("ATTACHMENT")
 o:set_required(true)
