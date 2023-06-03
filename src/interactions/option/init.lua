@@ -125,6 +125,8 @@ function CommandOption:set_max_value(n)
     assert(InteractionManager.enums[self.payload.type] ~= "NUMBER" and InteractionManager.enums[self.payload.type] ~= "INTEGER", "Can only use max value for integer or number types!")
 
     self.payload.max_value = n
+
+    return self
 end
 
 function CommandOption:set_min_value(n)
@@ -132,6 +134,8 @@ function CommandOption:set_min_value(n)
     assert(InteractionManager.enums[self.payload.type] ~= "NUMBER" and InteractionManager.enums[self.payload.type] ~= "INTEGER", "Can only use min value for integer or number types!")
 
     self.payload.min_value = n
+
+    return self
 end
 
 ---@param int Interaction
@@ -148,6 +152,7 @@ function CommandOption:handle_autocomplete(int, data, value)
     end
 end
 
+---@param fn fun(data: table, value: string): {name:string, value:string}[]
 function CommandOption:set_on_autocomplete(fn)
     self._autocomplete_callback = fn
 

@@ -46,7 +46,7 @@ end
 
 --- Saves the .json file for one of the databases.
 ---@param data_name string The database to save.
-function save_data(data_name)
+function _G.save_data(data_name)
 	if not is_string(data_name) then
 		printf("Calling save_data(), but the data name supplied [%s] isn't a string!", tostring(data_name))
 	end

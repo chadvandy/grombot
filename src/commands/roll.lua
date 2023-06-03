@@ -14,17 +14,49 @@ local Command = InteractionManager:new_command("roll", "Roll some bones y'all!",
 Command.id = "1029879590929309756"
 Command.is_global = true
 
-local pool = Command:create_option("dice_pool", "The number of dice to roll!")
-pool:set_type("INTEGER")
-pool:set_required(true)
-pool:set_max_value(100)
-pool:set_min_value(1)
+do
+    Command:create_option("dice_pool", "The number of dice to roll!")
+        :set_type("INTEGER")
+        :set_max_value(100)
+        :set_min_value(1)
+end
+
+
+--- TODO dF support?
 
 do
-    --- TODO use option choies? ie., d4, d6, d8, d10, dF, etc.
-    local num_faces = Command:create_option("num_faces", "The number of faces for each die!")
-    num_faces:set_type("INTEGER")
-    num_faces:set_required(true)
+    Command:create_option("dice_type", "The number of faces for each die!")
+        :set_type("INTEGER")
+        :set_option_choices({
+            {
+                name = "d4",
+                value = 4,
+            },
+            {
+                name = "d6",
+                value = 6,
+            },
+            {
+                name = "d8",
+                value = 8,
+            },
+            {
+                name = "d10",
+                value = 10,
+            },
+            {
+                name = "d12",
+                value = 12,
+            },
+            {
+                name = "d20",
+                value = 20,
+            },
+            {
+                name = "d100",
+                value = 100,
+            }
+        })
 
     local modifier = Command:create_option("modifier", "A number to modify the end result by - ex., +1 or -6.")
     modifier:set_type("INTEGER")
@@ -71,9 +103,9 @@ local function roll(i, f)
 end
 
 Command:set_callback(function(int, args)
-    local num_dice = args.dice_pool
-    local num_faces = args.num_faces
-    local mod = args.modifier
+    local num_dice = args.dice_pool or 1
+    local num_faces = args.dice_type or 6
+    local mod = args.modifier or 0
     local num_keep = args.num_keep
     local keep_highest = not is_boolean(args.keep_highest) and true or args.keep_highest
 

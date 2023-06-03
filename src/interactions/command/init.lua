@@ -37,6 +37,8 @@ local defaults = {
 
     ---@type string[]
     guilds = {"531219831861805067"},
+
+    permissions = {},
 }
 
 ---@class Command : Class
@@ -75,6 +77,15 @@ function Command:dev(b)
         self.is_global = false
         self.guilds = {"531219831861805067"}
     end
+end
+
+function Command:disable_by_default(b)
+    self.payload.default_member_permissions = "0"
+end
+
+function Command:set_moderator_only()
+    local perm = bit.lshift(1, 2)
+    self.payload.default_member_permissions = tostring(perm)
 end
 
 --- Call :deploy() when any changes are made to a command's parameters.
@@ -140,6 +151,8 @@ function Command:set_callback(fn)
     assert(is_function(fn))
 
     self.callback = fn
+
+    return self
 end
 
 ---@param t CommandOption[]

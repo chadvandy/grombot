@@ -19,7 +19,7 @@ local Member = {}
 ---@return Color
 function Member:getColor() end
 ---Checks whether the member has a specific permission. If `channel` is omitted, then only guild-level permissions are checked. This is a relatively expensive operation. If you need to check multiple permissions at once, use the `getPermissions` method and check the resulting object.
----@param channel GuildChannel
+---@param channel GuildChannel?
 ---@param perm Permissions | number
 ---@return boolean
 function Member:hasPermission(channel, perm) end

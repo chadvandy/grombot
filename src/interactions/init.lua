@@ -225,6 +225,7 @@ function InteractionManager:init()
         end
     end
 
+    print("IM:init() completed!")
     self.is_init = true
 end
 
@@ -351,6 +352,7 @@ end
 function InteractionManager:process_slash_command(int, data, args)
     local command, args = self:get_slash_command_from_data(data, args)
     if not command then return end
+    if not args then args = {} end
 
     command:process(int, args)
 end

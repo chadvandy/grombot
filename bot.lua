@@ -269,6 +269,8 @@ client:once('ready', function()
 	for i = 1, #ready_functions do
 		ready_functions[i]()
 	end
+
+	print("Bot ready completed!")
 end)
 
 local reaction_message_id = "617129472583270400"

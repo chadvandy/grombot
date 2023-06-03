@@ -159,7 +159,7 @@ end
 @d Returns the hexadecimal string that represents the permissions value.
 ]=]
 function Permissions:toHex()
-	return format('0x%08X', self._value)
+	return format('0x%08X', tonumber(self._value))
 end
 
 --[=[
