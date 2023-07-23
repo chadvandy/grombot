@@ -1,27 +1,5 @@
--- Regenerate GUID from a .twui.xml file.
-
-local discordia = require("discordia")
-local client = discordia.storage.client
-
----@type InteractionManager
-local InteractionManager = discordia.storage.InteractionManager
-
-local typing = require("type_checking")
-local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
-local log_me = require("logging").log_me
-
-
-local Command = InteractionManager:new_command("regen_guid", "Regenerate GUIDs within a .twui.xml file!", "CHAT_INPUT")
-
-Command.is_global = true
-Command.id = "1109528588744654899"
-
-local o = Command:create_option("file", ".twui.xml file to regenerate!")
-o:set_type("ATTACHMENT")
-o:set_required(true)
-
----@param file_text string The entire contents of the .twui.xml file.
-local function regenerate_guid(file_text)
+    ---@param file_text string The entire contents of the .twui.xml file.
+return function(file_text)
     flush_random()
 
     local guid_template ='xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'
@@ -159,41 +137,3 @@ local function regenerate_guid(file_text)
 
     return new_file_text, error_msg
 end
-
-Command:set_callback(function (int, args)
-    if args.file then
-        -- int:reply("We have an arg provided for file!")
-
-        local att = args.file
-        local url = att.url
-        local filename = att.filename
-        local ending = ".twui.xml"
-
-        if filename:sub(-#ending) ~= ending then
-            int:reply("This isn't a .twui.xml file!")
-            return
-        end
-
-        print("File name: "  .. att.filename)
-        print("Attachment URL: " .. url)
-        
-        local response, body = http.request("GET", url)
-
-        local txt, err = regenerate_guid(body)
-
-        if err ~= "" then
-            int:reply("Error while regenerating GUIDs:" .. err)
-        else
-            local suc,err = int:reply({content = "Here is your TWUI file with regenerated GUID's!", file = {filename, txt}})
-            if not suc then
-                errmsg(err)
-            end
-        end
-
-        -- int:reply("Response: " .. tostring(response))
-        -- int:reply("Bobody: " .. tostring(body))
-    end
-end)
-
-return Command
-

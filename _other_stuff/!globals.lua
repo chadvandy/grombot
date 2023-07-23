@@ -46,7 +46,7 @@ end
 
 --- Saves the .json file for one of the databases.
 ---@param data_name string The database to save.
-function _G.save_data(data_name)
+function _G.save_data_old(data_name)
 	if not is_string(data_name) then
 		printf("Calling save_data(), but the data name supplied [%s] isn't a string!", tostring(data_name))
 	end
@@ -60,6 +60,30 @@ function _G.save_data(data_name)
     new_t = sanitize(new_t)
 
 	FS.writeFileSync("json/"..data_name..".json", JSON.encode(new_t))
+end
+
+--- Saves the .Lua file for one of the databases.
+---@param database string The database to save.
+function _G.save_data(database)
+    if not is_string(database) then
+		printf("Calling save_data(), but the data name supplied [%s] isn't a string!", tostring(database))
+        return
+	end
+
+	if not saved_data[database] then
+		printf("ERROR! Trying to save data with name %q, but nothing with that key is found in the database!", database)
+        return
+	end
+
+    local str = ""
+
+    str = fast_print(saved_data[database], {class=true})
+    if not is_string(str) then
+        -- errmsg
+        return
+    end
+
+    FS.writeFileSync("data/"..database..".lua", "return " .. str)
 end
 
 ---@param member Member
@@ -287,35 +311,57 @@ end
 --- @param t table
 --- @param ignored_fields table<string>
 --- @param loop_value number
+--- @param conversion_table table
 --- @return table<string>
-local function inner_loop_fast_print(t, ignored_fields, loop_value)
+local function inner_loop_fast_print(t, ignored_fields, loop_value, conversion_table)
     --- @type table<any>
 	local table_string = {'{\n'}
 	--- @type table<any>
 	local temp_table = {}
+
+    conversion_table[t] = true
+
     for key, value in pairs(t) do
+
+        local tkey = type(key)
+        local tval = type(value)
+
+        if tkey ~= "string" and tkey ~= "number" then
+            -- invalid key, go to next!
+            goto next
+        end
+
+        if tval ~= "string" and tval ~= "number" and tval ~= "table" and tval ~= "nil" and tval ~= "boolean" then
+            -- invalid value, go to next!
+            goto next
+        end
+
+        if tval == "table" and conversion_table[tval] then
+            goto next
+        end
+
+        if ignored_fields and tkey == "string" and ignored_fields[key] then
+            goto next
+        end
+
         table_string[#table_string + 1] = string.rep('\t', loop_value + 1)
 
-        if type(key) == "string" then
+        if tkey == "string" then
             table_string[#table_string + 1] = '["'
             table_string[#table_string + 1] = key
             table_string[#table_string + 1] = '"] = '
-        elseif type(key) == "number" then
-            table_string[#table_string + 1] = '['
-            table_string[#table_string + 1] = key
-            table_string[#table_string + 1] = '] = '
         else
             table_string[#table_string + 1] = '['
             table_string[#table_string + 1] = tostring(key)
             table_string[#table_string + 1] = '] = '
         end
 
-		if type(value) == "table" then
-			temp_table = inner_loop_fast_print(value, ignored_fields, loop_value + 1)
+		if tval == "table" then
+			temp_table = inner_loop_fast_print(value, ignored_fields, loop_value + 1, conversion_table)
 			for i = 1, #temp_table do
 				table_string[#table_string + 1] = temp_table[i]
 			end
-		elseif type(value) == "string" then
+		elseif tval == "string" then
 			table_string[#table_string + 1] = '[=['
 			table_string[#table_string + 1] = value
 			table_string[#table_string + 1] = ']=],\n'
@@ -323,6 +369,7 @@ local function inner_loop_fast_print(t, ignored_fields, loop_value)
 			table_string[#table_string + 1] = tostring(value)
 			table_string[#table_string + 1] = ',\n'
 		end
+        ::next::
     end
 
 	table_string[#table_string + 1] = string.rep('\t', loop_value)
@@ -336,48 +383,70 @@ end
 --- @return string|boolean
 function _G.fast_print(t, ignored_fields)
     if not (type(t) == "table") then
-        return "false"
+        return "{}"
     end
 
     --- @type table<any>
     local table_string = {'{\n'}
 	--- @type table<any>
 	local temp_table = {}
+    local already_converted = {}
+    setmetatable(already_converted, {__mode = "k"})
+
+    already_converted[t] = true
 
     for key, value in pairs(t) do
 
+        local tkey = type(key)
+        local tval = type(value)
+
+        if tkey ~= "string" and tkey ~= "number" then
+            -- invalid key, go to next!
+            goto next
+        end
+
+        if tval ~= "string" and tval ~= "number" and tval ~= "table" and tval ~= "nil" and tval ~= "boolean" then
+            -- invalid value, go to next!
+            goto next
+        end
+
+        if tval == "table" and already_converted[tval] then
+            goto next
+        end
+
+        if ignored_fields and tkey == "string" and ignored_fields[key] then
+            goto next
+        end
+
         table_string[#table_string + 1] = string.rep('\t', 1)
-        if type(key) == "string" then
+
+        if tkey == "string" then
             table_string[#table_string + 1] = '["'
             table_string[#table_string + 1] = key
             table_string[#table_string + 1] = '"] = '
-        elseif type(key) == "number" then
+        elseif tkey == "number" then
             table_string[#table_string + 1] = '['
             table_string[#table_string + 1] = key
             table_string[#table_string + 1] = '] = '
-        else
-            --- TODO skip it somehow?
-            table_string[#table_string + 1] = '['
-            table_string[#table_string + 1] = tostring(key)
-            table_string[#table_string + 1] = '] = '
         end
 
-        if type(value) == "table" then
-            temp_table = inner_loop_fast_print(value, ignored_fields, 1)
+        if tval == "table" then
+            temp_table = inner_loop_fast_print(value, ignored_fields, 1, already_converted)
             for i = 1, #temp_table do
                 table_string[#table_string + 1] = temp_table[i]
             end
-        elseif type(value) == "string" then
+        elseif tval == "string" then
             table_string[#table_string + 1] = '[=['
             table_string[#table_string + 1] = value
             table_string[#table_string + 1] = ']=],\n'
-        elseif type(value) == "boolean" or type(value) == "number" then
+        else
             table_string[#table_string + 1] = tostring(value)
             table_string[#table_string + 1] = ',\n'
-        else
-            -- unsupported type, technically.
-            table_string[#table_string+1] = "nil,\n"
+        -- else
+        --     -- unsupported type, technically.
+        --     table_string[#table_string+1] = "nil,\n"
         end
+    ::next::
     end
 
     table_string[#table_string + 1] = "}\n"
@@ -1152,7 +1221,7 @@ do
 	end)
 
 	rawset(client, "removeListener", function(self, name, fn)
-		printf("Calling Vandy's special remove listener!")
+		printf("Calling Groovy's special remove listener!")
 		local listeners = self._listeners[name]
 		if not listeners then return end
 		for i, listener in ipairs(listeners) do

@@ -74,7 +74,7 @@ do
             name:set_required(true)
             name:set_type("STRING")
             name:set_autocomplete(true)
-            name:set_on_autocomplete(function(data, value)
+            name:set_on_autocomplete(function(int, data, value)
                 local choices = {}
         
                 local srch = string.lower(value)

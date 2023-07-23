@@ -22,10 +22,13 @@ local function is_owner_of_macro(macro, user_id)
 	end
 end
 
+---@class MacroManager
+local def = {
+	macros = {}
+}
 
-
----@class MacroManager : Class
-local MacroManager = NewClass("MacroMaanger", {})
+---@class MacroManager
+local MacroManager = NewClass("MacroMaanger", def)
 
 discordia.storage.MacroManager = MacroManager
 
@@ -33,32 +36,43 @@ discordia.storage.MacroManager = MacroManager
 MacroManager.MacroObj = require "./macro"
 
 function MacroManager:init()
-	local macros = self:get_macros()
-	for k, macro in pairs(macros) do
-		self.MacroObj:instantiate(macro)
+	self:load_macro_data()
+	-- local macros = self:get_macros()
+	-- if macros then
+	-- 	for k, macro in pairs(macros) do
+	-- 		macro = self.MacroObj:instantiate(macro)
+	
+	-- 		-- instantiate ticket numbers for older macros!
+	-- 		if macro.ticket_num == 0 then
+	-- 			macro.ticket_num = TM:generate_ticket_number("macro")
+	-- 		end
+	-- 	end
+	-- end
 
-		-- instantiate ticket numbers for older macros!
-		if macro.ticket_num == 0 then
-			macro.ticket_num = TM:generate_ticket_number("macro")
-		end
-	end
 
-	local tags = self:get_tags()
-	for k, tag in pairs(tags) do
-		self.MacroTag:instantiate(tag)
-	end
+	-- local tags = self:get_tags()
+	-- for k, tag in pairs(tags) do
+	-- 	self.MacroTag:instantiate(tag)
+	-- end
 
 	self:save()
+end
+
+function MacroManager:load_macro_data()
+	for key, macro in pairs(saved_data.macros._MACROS) do
+		self.macros[key] = self.MacroObj:instantiate(macro)
+	end
 end
 
 --- Get all macros.
 ---@return table<string, MacroObj>
 function MacroManager:get_macros()
-	return saved_data.macros._MACROS
+	return self.macros
 end
 
+---@return MacroObj
 function MacroManager:get_macro(name)
-	return saved_data.macros._MACROS[name]
+	return self.macros[name]
 end
 
 ---@param int Interaction
@@ -88,8 +102,30 @@ function MacroManager:all_macros(int)
 	Nav:start(int)
 end
 
+function MacroManager:new_macro(name, desc)
+	print("Creating new macro")
+	local new_macro = self.MacroObj:new(name, desc)
+	self.macros[name] = self.MacroObj:new(name, desc)
+	print("New macro created")
 
-function MacroManager:save()
-    save_data("macros")
+	self:save()
+	print("Saved")
+
+	return new_macro
 end
 
+function MacroManager:delete_macro(name)
+	self.macros[name] = nil
+	saved_data.macros._MACROS[name] = nil
+	self:save()
+end
+
+function MacroManager:save()
+	saved_data.macros._MACROS = {}
+	
+	for key, macro in pairs(self:get_macros()) do
+		saved_data.macros._MACROS[macro.name] = macro:to_save()
+	end
+	
+    save_data("macros")
+end

@@ -32,20 +32,27 @@ local code = CM:new_command(
 
         local ret = nil
         local success, runtime_err = pcall(function() ret = fn() end)
-        if not success then return channel:send(runtime_err) end
+        if not success then return message:reply(runtime_err) end
 
         if ret then
-            channel:send("**Returned**: " .. tostring(ret))
+            message:reply("**Returned**: " .. tostring(ret))
         end
 
         local str = table.concat(lines, "\n")
         if str and str ~= "" then
-            return channel:send(table.concat(lines, "\n"))
+            _G.print("TEST")
+            if string.len(str) <= 1000 then
+                local ok, err = message:reply(str)
+                if not ok then errmsg(err) end
+            end
+
+            return
         end
 
         -- if nothing was returned and nothing was printed, just say Hi.
         if not ret then
-            return channel:send("I did your code, I guess.")
+            channel:send("I did your code, I guess.")
+            return
         end
     end
 )

@@ -114,8 +114,9 @@ _class = function(className, attr)
 	c.__tostring = baseMt.__tostring
 	c.__call = baseMt.__call
 
-	---@param self Class
-	---@return Class
+	---@generic T
+	---@param self T
+	---@return T
 	c.__new = function(self)
 		local o = new_obj(self)
 		return o
@@ -224,7 +225,8 @@ end
 
 return
     --- Create a new class object!
+	---@generic T
     ---@param className string The new class's name.
-    ---@param attr table? Default attributes for this class.
-    ---@return Class
+    ---@param attr T? Default attributes for this class.
+    ---@return T
     function(className, attr) return _class(className, attr) end

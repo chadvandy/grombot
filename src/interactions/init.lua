@@ -158,6 +158,28 @@ function InteractionManager:get_global_command(cmd)
     return ok
 end
 
+function InteractionManager:get_global_commands()
+    local ok, err = client:getGlobalApplicationCommands()
+
+    if not ok then
+        return errmsg("Trying to get global commands, but failed!\n" .. err)
+    end
+
+    return ok
+end
+
+function InteractionManager:delete_global_command(cmd)
+    if is_nil(cmd.id) then return end
+
+    local ok, err = client:getGlobalApplicationCommand(cmd.id)
+
+    if not ok then
+        return errmsg("Trying to delete global command w/ ID [" .. cmd.id .. "], but failed!\n" .. err)
+    end
+
+    return ok
+end
+
 ---@return Interaction.Button
 function InteractionManager:get_button_template(component_key)
     return self._components.Button[component_key]

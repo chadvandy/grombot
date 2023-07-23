@@ -1,5 +1,3 @@
--- TODO the Macro system
-
 local discordia = require("discordia")
 local client = discordia.storage.client
 
@@ -19,18 +17,122 @@ Command.id = "1112747919846674513"
 Command:set_global(true)
 
 -- Main command is used to search through all macros.
+do
+    local All = Command:add_subcommand("all", "List all macros")
+    All:set_callback(function (int, args)
+        MacroManager:all_macros(int)
+    end)
+end
 
-local All = Command:add_subcommand("all", "List all macros")
-All:set_callback(function (int, args)
-    MacroManager:all_macros(int)
-end)
 
-local Search = Command:add_subcommand("search", "Search for and display a specific macro.")
-Search:create_option("name", "Name of the macro you're looking for")
-    :set_type("STRING")
-    :set_required(true)
-    :set_autocomplete(true)
-    :set_on_autocomplete(function(data, value)
+do
+    local Search = Command:add_subcommand("search", "Search for and display a specific macro.")
+    Search:create_option("name", "Name of the macro you're looking for")
+        :set_type("STRING")
+        :set_required(true)
+        :set_autocomplete(true)
+        :set_on_autocomplete(function(int, data, value)
+            local all = MacroManager:get_macros()
+
+            ---@type table<string, MacroObj>
+            local choices = table.filter(
+                all,
+                ---@param val MacroObj
+                ---@param key string
+                ---@param t table<string, MacroObj>
+                function (val, key, t)
+                    if string.find(string.lower(val.name), string.lower(value)) then
+                        return true
+                    end
+                end,
+                25
+            )
+
+            local ret = {}
+            for _,macro in pairs(choices) do
+                ret[#ret+1] = {
+                    name = macro.name,
+                    value = macro.name,
+                }
+            end
+
+            return ret
+        end)
+
+    Search:set_callback(function (int, args)
+        local macro = MacroManager:get_macro(args.name)
+
+        int:reply(macro.field)
+    end)
+end
+
+-- Create a new Macro.
+-- /macro create -> modal
+do
+    --- TODO some verification to prevent a new macro being created with the name of an extant one.
+    local Create = Command:add_subcommand("create", "Create a new Macro!")
+
+    Create:set_callback(function (int, args)
+        -- Trigger Modal.
+        local CreateModal = InteractionManager:create_modal("create_macro", "Create a new macro!")
+        CreateModal:add_input("name", "Macro Name", true, true)
+        CreateModal:add_input("desc", "Set a description", true, false)
+    
+        CreateModal:set_callback(function (m_int, m_args)
+            local name, desc = m_args.name, m_args.desc
+    
+            if MacroManager:get_macro(name) then
+                m_int:reply("There's already a Macro with the name " .. name .. "!", true)
+                return
+            end
+    
+            if string.len(desc) <= 0 then
+                m_int:reply("Invalid description!", true)
+                return
+            end
+    
+            MacroManager:new_macro(name, desc)
+            m_int:reply("New Macro created named " .. name .. "! Good job!")
+        end)
+        
+        int:modal(CreateModal:get_payload())
+    end)
+end
+
+do
+    --- TODO move the edit functions into a Modal.
+    local Edit = Command:add_subcommand("edit", "Edit a Macro.")
+
+    Edit:set_callback(function (int, args)
+        local member = int.member
+        local name = args.name
+        local desc, rename = args.desc, args.rename
+
+        local macro = MacroManager:get_macro(name)
+        if not macro then
+            int:reply("No macro with the name " .. args.name .. " exists!", true)
+            return
+        end
+
+        if desc then
+            -- TODO convert \n into true new lines.
+            desc = desc:gsub("\\n", "\n")
+            macro:set_field(desc)
+        end
+
+        if rename then
+            macro:set_name(rename)
+        end
+
+        MacroManager:save()
+        int:reply("Macro " .. args.name .. " edited!")
+    end)
+
+    local name = Edit:create_option("name", "Name of the macro you're looking for")
+    name:set_type("STRING")
+    name:set_required(true)
+    name:set_autocomplete(true)
+    name:set_on_autocomplete(function(int, data, value)
         local all = MacroManager:get_macros()
 
         ---@type table<string, MacroObj>
@@ -58,11 +160,65 @@ Search:create_option("name", "Name of the macro you're looking for")
         return ret
     end)
 
-Search:set_callback(function (int, args)
-    local macro = MacroManager:get_macro(args.name)
+    local desc = Edit:create_option("desc", "New description for the Macro.")
+    desc:set_type("STRING")
+    desc:set_required(false)
 
-    int:reply(macro.field)
-end)
+    local rename = Edit:create_option("rename", "New name for the Macro.")
+    rename:set_type("STRING")
+    rename:set_required(false)
+end
+
+do
+    local Delete = Command:add_subcommand("delete", "Delete a Macro. Only the owner can delete their Macros, or admins.")
+
+    Delete:set_callback(function (int, args)
+        local member = int.member
+        local macro = MacroManager:get_macro(args.name)
+
+        if not macro then
+            int:reply("No macro with the name " .. args.name .. " exists!", true)
+            return
+        end
+
+        if member and member:hasPermission(nil, discordia.enums.permission.banMembers) then
+            MacroManager:delete_macro(args.name)
+            int:reply("Macro " .. args.name .. " deleted!")
+        else
+            int:reply("You don't have permission to delete this Macro!", true)
+        end
+    end)
+
+    local opt = Delete:create_option("name", "Macro to delete.")
+    opt:set_required(true)
+    opt:set_autocomplete(true)
+    opt:set_type("STRING")
+
+    opt:set_on_autocomplete(function (int, data, value)
+        local member = int.member
+        local choices = {}
+        local search_str = string.lower(value)
+
+        if member and member:hasPermission(nil, discordia.enums.permission.banMembers) then
+            for macro_name, macro in pairs(MacroManager:get_macros()) do
+                -- if is_nil(macro.user) or macro.user.id == 
+                if string.find(string.lower(macro_name), search_str) then
+                    choices[#choices+1] = {
+                        name = macro_name,
+                        value = macro_name,
+                    }
+    
+                    if #choices == 25 then break end
+                end
+            end
+        else
+            choices[1] = "Admin-only command!"
+        end
+
+
+        return choices
+    end)
+end
 
 -- -- local search = Command:add_subcommand_group("search", "Search for macros!")
 -- local Create = Command:add_subcommand_group("create", "Create a new Macro!")

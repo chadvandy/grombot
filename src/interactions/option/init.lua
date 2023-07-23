@@ -19,7 +19,7 @@ local defaults = {
     choices = {},
 
     _is_autocomplete = false,
-    _autocomplete_callback = function(data, value) return{} end
+    _autocomplete_callback = function(int, data, value) return{} end
 }
 
 ---@class CommandOption : Class
@@ -141,7 +141,7 @@ end
 ---@param int Interaction
 ---@param data table
 function CommandOption:handle_autocomplete(int, data, value)
-    local choices = self._autocomplete_callback(data, value)
+    local choices = self._autocomplete_callback(int, data, value)
 
     if not is_table(choices) then choices = {} end
     
@@ -152,7 +152,7 @@ function CommandOption:handle_autocomplete(int, data, value)
     end
 end
 
----@param fn fun(data: table, value: string): {name:string, value:string}[]
+---@param fn fun(int: Interaction, data: table, value: string): {name:string, value:string}[]
 function CommandOption:set_on_autocomplete(fn)
     self._autocomplete_callback = fn
 

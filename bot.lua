@@ -29,8 +29,7 @@ end
 local typing = require("type_checking")
 local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
 
-NewClass = require "../30-log"
-_G.NewClass = NewClass
+_G.NewClass = require "../30-log"
 print("NewClass is: "..tostring(NewClass))
 
 _G.ENUMS = discordia.enums
@@ -56,13 +55,13 @@ prefix = "?"
 other_stuff("!globals")
 
 ---@type ticket_manager
-TM = other_stuff("ticket_manager")
+_G.TM = other_stuff("ticket_manager")
 
 ---@type prompt
-PM = other_stuff("prompt_manager")
+_G.PM = other_stuff("prompt_manager")
 
 ---@type command_manager
-CM = other_stuff("command_manager")
+_G.CM = other_stuff("command_manager")
 
 
 _G.saved_data = {
@@ -91,7 +90,7 @@ _G.saved_data = {
 }
 
 local function load_file(name)
-	local filepath = "json/"..name..".json"
+	local filepath = "data/"..name..".lua"
 
 	local file = FS.readFileSync(filepath)
 
@@ -100,9 +99,10 @@ local function load_file(name)
 	end
 
 	if file then
-		local json = JSON.decode(file)
-		if json then
-			saved_data[name] = json
+		local data = loadstring(file)
+		if data then data = data() end
+		if data then
+			saved_data[name] = data
 		else
 			printf("Data in %s is not JSON-able, creating new.", filepath)
 			new()
@@ -115,10 +115,44 @@ local function load_file(name)
 	printf("Loaded file %s, the new data is [%s]", name, tostring(saved_data[name]))
 end
 
+local function convert_saved_data()
+	-- local path = "json/"
+
+	-- for k, _ in pairs(saved_data) do
+	-- 	local file = FS.readFileSync(path .. k .. ".json")
+
+	-- 	if file then
+	-- 		local json = JSON.decode(file)
+
+	-- 		if json then
+	-- 			FS.writeFileSync("data/"..k..".lua", "return " .. fast_print(json))
+	-- 		end
+	-- 	end
+	-- end
+
+	local old_macros = require "old_macros"
+	print(old_macros)
+	-- local macros_tab, err = loadstring(old_macros)
+	-- if not macros_tab then
+	-- 	errmsg(err)
+	-- 	return
+	-- end
+	local macros_tab = old_macros
+	if macros_tab then
+		print(type(macros_tab))
+		-- macros_tab = macros_tab()
+		
+		FS.writeFileSync("data/macros_test.lua", "return " .. fast_print(macros_tab))
+	end
+
+end
+
 local function load_saved_data()
 	printf("Loading saved data!")
 	local ok, err = pcall(function()
 		for k,_ in pairs(saved_data) do
+			print("Loading file: " .. k)
+
 			load_file(k)
 		end
 	end) if not ok then printf(err) end
@@ -225,12 +259,14 @@ end
 ---@type InteractionManager
 local InteractionManager = require("./src/interactions")
 
-require ("./src/macros/init")
+require ("./src/systems/macros")
 
 client:once('ready', function()
 	client:setActivity({name="the cries of grobi.", type = ENUMS.activityType.listening})
 	-- read the read files
 	load_saved_data()
+
+	-- convert_saved_data()
 
 	-- prep all commands
 	CM:init()
@@ -238,7 +274,9 @@ client:once('ready', function()
 	other_stuff("reaction_roles")
 
 	--- TODO post a "now online" message somewhere.
-	InteractionManager:init()
+	discordia.storage.InteractionManager:init()
+
+	discordia.storage.MacroManager:init()
 
 	-- edit reaction msg
 	do
@@ -372,12 +410,28 @@ client:on('messageCreate',
 			return
 		end
 
-		local user_id = message.author.id
-		local channel_id = message.channel.id
+		local author = message.author
+		local channel = message.channel
+
+		local user_id = author.id
+		local channel_id = channel.id
 
 		if message.content:startswith(prefix) then
 			CM:message_created(message)
 			return
+		end
+
+		-- test if someone pinged Mixu in the Mixu channel.
+		if channel_id == "466624302897430530" and message.mentionedUsers:get("331428721556848641") then
+			local macro = discordia.storage.MacroManager:get_macro("PingMixu")
+
+			local response = channel:send {
+				content = macro:get_field(),
+				reference = {
+					message = message.id,
+					mention = false,
+				}
+			}
 		end
 	end
 )
