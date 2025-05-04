@@ -73,6 +73,8 @@ do -- TWUI helpers
 
             print("File name: "  .. att.filename)
             print("Attachment URL: " .. url)
+
+            int:replyDeferred(true)
             
             local response, body = http.request("GET", url)
 

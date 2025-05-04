@@ -64,8 +64,8 @@ function Member:undeafen() end
 ---@return boolean
 function Member:kick(reason) end
 ---Equivalent to `Member.guild:banUser(Member.user, reason, days)`
----@param reason string
----@param days number
+---@param reason? string
+---@param days? number
 ---@return boolean
 function Member:ban(reason, days) end
 ---Equivalent to `Member.guild:unbanUser(Member.user, reason)`
@@ -1066,7 +1066,7 @@ function Channel:__init() end
 ---@overload fun(seconds: number, microseconds: number):Date
 local Date = {}
 ---Returns a string from this Date object via Lua's `os.date`. If no format string is provided, the default is '%a %b %d %Y %T GMT%z (%Z)'.
----@param fmt string
+---@param fmt string|nil
 ---@return string
 function Date:toString(fmt) end
 ---Returns an ISO 8601 string that represents the stored date and time. If `sep` and `tz` are both provided, then they are used as a custom separator and timezone; otherwise, `T` is used for the separator and `+00:00` is used for the timezone, plus microseconds if available.
@@ -1481,7 +1481,7 @@ function Guild:getRole(id) end
 function Guild:getEmoji(id) end
 ---Gets a text, voice, or category channel object by ID.
 ---@param id Channel | string
----@return GuildChannel
+---@return GuildChannel|GuildTextChannel|GuildVoiceChannel|GuildCategoryChannel|nil
 function Guild:getChannel(id) end
 ---Creates a new text channel in this guild. The name must be between 2 and 100 characters in length.
 ---@param name string

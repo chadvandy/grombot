@@ -39,6 +39,9 @@ local defaults = {
     guilds = {"531219831861805067"},
 
     permissions = {},
+
+    ---@type string
+    id = "",
 }
 
 ---@class Command : Class
@@ -88,11 +91,12 @@ function Command:set_moderator_only()
     self.payload.default_member_permissions = tostring(perm)
 end
 
---- Call :deploy() when any changes are made to a command's parameters.
----@param is_global any
----@param guilds any
-function Command:deploy(is_global, guilds)
-    
+function Command:deploy_global()
+    InteractionManager:add_global_command(self)
+end
+
+function Command:update_global()
+    InteractionManager:edit_global_command(self)
 end
 
 function Command:set_global(b)

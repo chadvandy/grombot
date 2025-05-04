@@ -169,6 +169,6 @@ Command:set_callback(function(int, args)
     int:reply(str)
 end)
 
-return Command
 
--- log_me(client:createGlobalApplicationCommand(payload))
+
+return Command

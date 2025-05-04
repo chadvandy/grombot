@@ -5,9 +5,9 @@ local mute_role_id = "650338854359924806"
 ---@param member Member
 ---@param admin Member
 ---@param reason string|nil
----@param duration any
----@param message Message
-local function admin_operation_notify(operation_type, member, admin, reason, duration, message)
+---@param duration? any
+---@param message? Message
+function admin_operation_notify(operation_type, member, admin, reason, duration, message)
 	-- TODO type checking
 	local cnc_guild_id = "373745291289034763"
 	local logging_channel_id = "650311653388320778"

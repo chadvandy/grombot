@@ -12,10 +12,6 @@ return {
 			["name"] = [=[troubleshooting]=],
 			["description"] = [=[Troubleshooting macros, for users trying to get their mod lists functional.]=],
 		},
-		["Modding"] = {
-			["name"] = [=[Modding]=],
-			["description"] = [=[General modding help, tips, and tricks.]=],
-		},
 		["modding tools"] = {
 			["name"] = [=[modding tools]=],
 			["description"] = [=[Macros of or relating to the tools used for modding.]=],
@@ -23,6 +19,10 @@ return {
 		["To-Do"] = {
 			["name"] = [=[To-Do]=],
 			["description"] = [=[These macros have been created but not filled out, someone must fill them out!]=],
+		},
+		["Modding"] = {
+			["name"] = [=[Modding]=],
+			["description"] = [=[General modding help, tips, and tricks.]=],
 		},
 	},
 	["_MACROS"] = {
@@ -32,7 +32,7 @@ return {
 			},
 			["ticket_num"] = 49,
 			["user"] = [=[364410374688342018]=],
-			["num_uses"] = 12,
+			["num_uses"] = 13,
 			["name"] = [=[Steam Down?]=],
 			["creation_time"] = 0,
 			["field"] = [=[**Q: Is Steam down or buggy or slow or weird for anyone else?**
@@ -99,7 +99,7 @@ If you want to ensure your campaign- or battle- or frontend-specific .lua script
 			},
 			["ticket_num"] = 4,
 			["user"] = [=[]=],
-			["num_uses"] = 14,
+			["num_uses"] = 15,
 			["name"] = [=[that's a script break]=],
 			["creation_time"] = 0,
 			["field"] = [=[https://cdn.discordapp.com/attachments/466624302897430530/725382980356407416/scriptbreak.png]=],
@@ -141,7 +141,7 @@ Because of how the game is downloaded (the entire game with all of its packed fi
 			},
 			["ticket_num"] = 54,
 			["user"] = [=[]=],
-			["num_uses"] = 11,
+			["num_uses"] = 12,
 			["name"] = [=[Crashing Down!]=],
 			["creation_time"] = 0,
 			["field"] = [=[If a Tool crashed and the author asked for logs, you can find its logs here:
@@ -163,7 +163,7 @@ Because of how the game is downloaded (the entire game with all of its packed fi
 			},
 			["ticket_num"] = 31,
 			["user"] = [=[]=],
-			["num_uses"] = 92,
+			["num_uses"] = 95,
 			["name"] = [=[Breadcrumb]=],
 			["creation_time"] = 0,
 			["field"] = [=[If you're looking for something in the game, and you don't know what the actual in-game code for it is, or where the database entries related to it might be, start with the following method:
@@ -214,13 +214,26 @@ Data coring will cause a few significant issues for you, including:
 
 Many tables or data structures can be disabled in more ways than one - there's no sure guide to avoiding data coring, but it's a good practice to avoid it unless absolutely necessary.]=],
 		},
+		["Channel Usage"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 118,
+			["user"] = [=[]=],
+			["num_uses"] = 0,
+			["name"] = [=[Channel Usage]=],
+			["creation_time"] = 0,
+			["field"] = [=[Always make sure you are using the right channel to get the best response for your questions.
+If your query relates to general information about mod creation, how to accomplish your goal using tools and advice to doing so then the channels you are looking for are located in the Modding Square.
+
+If your query is related to the functions and use of a Tool or to a specific Mod/Group then you can find the appropriate channels in the Modder's Alley.]=],
+		},
 		["Movie Pack"] = {
 			["tags"] = {
 				["troubleshooting"] = true,
 			},
 			["ticket_num"] = 10,
 			["user"] = [=[]=],
-			["num_uses"] = 48,
+			["num_uses"] = 49,
 			["name"] = [=[Movie Pack]=],
 			["creation_time"] = 0,
 			["field"] = [=[**Movie-type pack files**
@@ -231,15 +244,18 @@ They are invisible in the vanilla mod launcher. With either Kaedrin's (pre-WH3) 
 
 \*In WH3 (and maybe onwards), movie-type pack files no longer are required for VFX changes.]=],
 		},
-		["dependencies"] = {
+		["RPFM"] = {
 			["tags"] = {
+				["modding tools"] = true,
+				["Modding"] = true,
 			},
-			["ticket_num"] = 84,
-			["user"] = [=[234019992197136384]=],
-			["num_uses"] = 7,
-			["name"] = [=[dependencies]=],
+			["ticket_num"] = 12,
+			["user"] = [=[]=],
+			["num_uses"] = 18,
+			["name"] = [=[RPFM]=],
 			["creation_time"] = 0,
-			["field"] = [=[https://cdn.discordapp.com/attachments/1009136110754074624/1030507555417493504/6d76w6.png]=],
+			["field"] = [=[Rusted Pack File Manager (#rpfm) is a way better tool for creating and editing mods than any other option currently available, and you should:
+https://c.tenor.com/LUOHdYdROZQAAAAM/just-do-it-shia-la-beouf.gif]=],
 		},
 		["EmpsLactase"] = {
 			["tags"] = {
@@ -256,7 +272,7 @@ They are invisible in the vanilla mod launcher. With either Kaedrin's (pre-WH3) 
 			},
 			["ticket_num"] = 14,
 			["user"] = [=[]=],
-			["num_uses"] = 24,
+			["num_uses"] = 28,
 			["name"] = [=[Sound Editing]=],
 			["creation_time"] = 0,
 			["field"] = [=[CA uses a pretty complicated sound system called WWise. The sound system in the game appears to be (almost) 100% data driven which is great news and  means we can do pretty much what ever we want. The bad news is that WWise is very complicated and there is currently no tooling support. There is about 150k sound files, all names something like 726472848.wem. That name is the hash of the sound name, which is not very useful. Wwise in its simplest form works by triggering an event which then triggers a sound. You can find a event name to sound ID map here (not all sounds are present, but they will all be added at some point) https://discord.com/channels/373745291289034763/795235087352201226/889975938434089020
@@ -296,7 +312,7 @@ For more Troubleshooting information hit up https://tw-modding.com/index.php/Tro
 			},
 			["ticket_num"] = 75,
 			["user"] = [=[308754289352900608]=],
-			["num_uses"] = 7,
+			["num_uses"] = 8,
 			["name"] = [=[dx11 launch option]=],
 			["creation_time"] = 0,
 			["field"] = [=[the -dx11 launch option causes mods not to work in WH3 after patch 1.1. You'll have to remove it.]=],
@@ -351,7 +367,7 @@ Since RPFM 2.4 you don't need to use MyMod to install a mod pack. You can instal
 			},
 			["ticket_num"] = 39,
 			["user"] = [=[218447420437037056]=],
-			["num_uses"] = 9,
+			["num_uses"] = 10,
 			["name"] = [=[PingMixu]=],
 			["creation_time"] = 0,
 			["field"] = [=[So, you have pinged Mixu in his own channel. A brave move, but a foolish one. Such a barbaric action was expressly forbidden by Section 1 of the Channel Description. It will not go unpunished.... Know that Mixu will take a day off from modding every time you fail him and yourself so miserably! Know that your plea will go unanswered and that you alone are responsible for the delay of *insert character name here* that Mixu has been working on tirelessly. If only this could have been avoided....]=],
@@ -421,13 +437,19 @@ https://cdn.discordapp.com/attachments/597937992773926962/929367264518623232/Unt
 			["num_uses"] = 0,
 			["name"] = [=[Powershell]=],
 			["creation_time"] = 0,
-			["field"] = [=[ Troubleshooting a huge mod list and wondering which pack file(s) contain XXX ? 
+			["field"] = [=[**Troubleshooting a huge mod list and wondering which pack file(s) contain something?**
 
-You can run the following command in a powershell console - update the path to your workshop folder:
-```ps
-Get-ChildItem "E:\SteamLibrary\steamapps\workshop\content\1142710" -Filter *.pack -Recurse | Select-String "XXX" | Select-Object -Unique Path
+You can leverage the "Windows PowerShell" console to search your entire installed-mods folder, and check their internal contents for something in particular you're looking for - maybe which mod adds a unit, edits a certain file, etc.
+
+1) Grab the path to your Steam Workshop folder - it's usually something like `C:/Steam/steamapps/workshop/content/1142710`. The final number changes based on the game. It'll always be in the same drive as the game itself.
+2) Open up Windows PowerShell. You can grab it by typing that into your Windows searchbar.
+3) Run the following command, replacing "PATH HERE" with your path, and "SEARCH HERE" with what you're searching for, both **within quotes** as in the example.
+```Powershell
+Get-ChildItem "PATH HERE" -Filter *.pack -Recurse | Select-String "SEARCH HERE" | Select-Object -Unique Path
 ```
-You can search for any string - database keys, ingame text, script names. The more unique the string you are looking for the better your chances at finding the pack file(s) you are looking for. Note that it can take a while to run depending on the size of your workshop folder.]=],
+You can search for any string - database keys, script names. The more unique the string you are looking for the better your chances at finding the pack file(s) you are looking for. It cannot search for in-game text (.loc files), and it can't search for numbers like unique IDs.
+
+Note: it can take a while to run depending on the size of your workshop folder. You'll know it's finished when a new "input" line is available in the console.]=],
 		},
 		["Use KMM"] = {
 			["tags"] = {
@@ -435,7 +457,7 @@ You can search for any string - database keys, ingame text, script names. The mo
 			},
 			["ticket_num"] = 24,
 			["user"] = [=[]=],
-			["num_uses"] = 10,
+			["num_uses"] = 11,
 			["name"] = [=[Use KMM]=],
 			["creation_time"] = 0,
 			["field"] = [=[https://media.discordapp.net/attachments/373745291289034765/569917924278796318/USEKMM.jpg?width=500&height=373]=],
@@ -445,7 +467,7 @@ You can search for any string - database keys, ingame text, script names. The mo
 			},
 			["ticket_num"] = 27,
 			["user"] = [=[]=],
-			["num_uses"] = 8,
+			["num_uses"] = 10,
 			["name"] = [=[Star Wars]=],
 			["creation_time"] = 0,
 			["field"] = [=[YOTURNEERAGERNSHTMEE
@@ -462,7 +484,7 @@ https://www.reddit.com/r/funny/comments/f1fxkp/my_drunk_friend_sent_me_this_voic
 			["creation_time"] = 0,
 			["field"] = [=[**Bisecting a Mod List**
 
-Since WH2 doesn't really have any usable mod debugging, one of the quickest ways to find a faulty mod that crashes your game on startup is to:
+In the likely event you don't get any usable mod debugging (like the rare WH3 crash pop-up), one of the quickest ways to find a faulty mod that crashes your game on startup is to:
 - Bisect (aka split in half) your mod list
 - Does the game still crash?
  - If yes, you know the fault is in the half you still have
@@ -513,15 +535,30 @@ This method doesn't work super well for problems that occur late into a campaign
 			["field"] = [=[WHFB, WH40k, and WHAoS are different IPs - anything from the latter two IPs is verboten.
 https://media.discordapp.net/attachments/810247445333540894/938734257256398908/CA_IP.png]=],
 		},
+		["perkele"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 121,
+			["user"] = [=[155800292477239305]=],
+			["num_uses"] = 5,
+			["name"] = [=[perkele]=],
+			["creation_time"] = 0,
+			["field"] = [=[https://cdn.discordapp.com/attachments/466624302897430530/1240728365359697960/mixu.mp4?ex=66f64c95&is=66f4fb15&hm=e418a60eaa9b35203911135cfc50270e85a86f5c2e63301950803bfc62bbaf20&]=],
+		},
 		["UI Listeners"] = {
 			["tags"] = {
 			},
 			["ticket_num"] = 68,
-			["user"] = [=[308754289352900608]=],
-			["num_uses"] = 4,
+			["user"] = [=[]=],
+			["num_uses"] = 7,
 			["name"] = [=[UI Listeners]=],
 			["creation_time"] = 0,
-			["field"] = [=[When working with the UI through Lua script, you can use UI events to get information about when components are being clicked, hovered, or otherwise used. Some examples of useful UI events are PanelOpenedCampaign, ComponentLClickUp, and ComponentMouseOn.When working with UI listeners:- you can get the name of the associated component from context.string, and the UIC for the associated component with UIComponent(context.component) - Some UI events will not trigger for all components by default. If you wish to enable all UI events for a particular component then you can do so by calling uic:AddScriptEventReporter() on the component.- **UI Events happen only on one computer in multiplayer games**; if you have gameplay consequences as a result of a UI Event then you must use CampaignUI.TriggerCampaignScriptEvent() to initiate the changes on both computers, otherwise your script will desynchronize in multiplayer campaigns.]=],
+			["field"] = [=[When working with the UI through Lua script, you can use UI events to get information about when components are being clicked, hovered, or otherwise used. Some examples of useful UI events are PanelOpenedCampaign, ComponentLClickUp, and ComponentMouseOn.
+
+When working with UI listeners:
+- you can get the name of the associated component from context.string, and the UIC for the associated component with UIComponent(context.component) 
+- Some UI events will not trigger for all components by default. If you wish to enable all UI events for a particular component then you can do so by calling uic:AddScriptEventReporter() on the component.
+- **UI Events happen only on one computer in multiplayer games**; if you have gameplay consequences as a result of a UI Event then you must use CampaignUI.TriggerCampaignScriptEvent() to initiate the changes on both computers, otherwise your script will desynchronize in multiplayer campaigns.]=],
 		},
 		["Print Methods"] = {
 			["tags"] = {
@@ -566,6 +603,16 @@ end
 
 You can make new ones.
 __You can look at vanilla ones within the database.__]=],
+		},
+		["Generate Loc"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 120,
+			["user"] = [=[]=],
+			["num_uses"] = 0,
+			["name"] = [=[Generate Loc]=],
+			["creation_time"] = 0,
+			["field"] = [=[Right-click any folder or file in the RPFM's 'Pack Contents' section, click "Generate Loc Data" and it will create every loc entry for your DB without one. https://media.discordapp.net/attachments/810247445333540894/1246781359414841384/image.png?ex=665da320&is=665c51a0&hm=67c5073bed72d81e5ac52eb5142a7d584ddce360423b94b405ccb646de95eab2&=&format=webp&quality=lossless]=],
 		},
 		["Lore"] = {
 			["tags"] = {
@@ -651,26 +698,19 @@ The training level has a subtle effect on when and how units approach the volley
 			["creation_time"] = 0,
 			["field"] = [=[https://cdn.discordapp.com/attachments/373745291289034765/817446090046570586/grom_ceiling.png]=],
 		},
-		["Mod Troubleshooting Guide"] = {
+		["Open All CA Packs"] = {
 			["tags"] = {
-				["troubleshooting"] = true,
 			},
-			["ticket_num"] = 11,
+			["ticket_num"] = 25,
 			["user"] = [=[]=],
-			["num_uses"] = 25,
-			["name"] = [=[Mod Troubleshooting Guide]=],
+			["num_uses"] = 5,
+			["name"] = [=[Open All CA Packs]=],
 			["creation_time"] = 0,
-			["field"] = [=[Read the mod troubleshooting guide at <https://tw-modding.com/index.php/Troubleshooting>]=],
-		},
-		["the real macro"] = {
-			["tags"] = {
-			},
-			["ticket_num"] = 58,
-			["user"] = [=[351546207551619072]=],
-			["num_uses"] = 7,
-			["name"] = [=[the real macro]=],
-			["creation_time"] = 0,
-			["field"] = [=[the real macro would be STOP FUCKING USING COLLECTIONS FROM 2017]=],
+			["field"] = [=[**Note: Since RPFM v4.x, Open All CA Packs has been fully replaced with the Dependency Manager. Use the Dependencies window and navigate through "Game Files" and "Assembly Kit Files" to access vanilla data!**
+
+A useful tool to check vanilla data and file locations. When in RPFM, you can press PackFile -> "Load all CA PackFiles", or use Ctrl+G (if you haven't changed the shortcut), to open up all CA packfiles for the game selected. This'll allow you to take a look at vanilla files and where they might be.
+
+https://cdn.discordapp.com/attachments/636634459264909322/809864893422370816/unknown.png]=],
 		},
 		["Upload Mod"] = {
 			["tags"] = {
@@ -679,12 +719,56 @@ The training level has a subtle effect on when and how units approach the volley
 			},
 			["ticket_num"] = 33,
 			["user"] = [=[]=],
-			["num_uses"] = 83,
+			["num_uses"] = 86,
 			["name"] = [=[Upload Mod]=],
 			["creation_time"] = 0,
 			["field"] = [=[In order to upload a mod to Steam, you have to have your finished .pack file, and a display image thumbnail for Steam. The image must be smaller than 1Mb, and it has to be a .png with the same name as your .pack (so you would have mymod.pack and mymod.png), with size about 250 square. 
 
 Put both of the items into your /data/ folder for the game you're modding, and open up the launcher. The mod should show up with the display thumbnail visible! Simply enable the mod in the launcher, press the folder button, and follow the dialogs from there onward to upload your mod and agree to the EULA.]=],
+		},
+		["cathay"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 79,
+			["user"] = [=[164896718750613507]=],
+			["num_uses"] = 9,
+			["name"] = [=[cathay]=],
+			["creation_time"] = 0,
+			["field"] = [=[Cathay, both as a location and a sovereign state, has been a footnote for most of this setting's history. Mostly crammed with Ind under the couch cushions of Warhammer Fantasy until the advent of Total War Warhammer 3 as well as The Old World. What both Games Workshop and Creative Assembly have given us in narrative and world building is **neither comprehensive nor exhaustive**, and as a result this macro was triggered because we very likely do not know the answer to your question.]=],
+		},
+		["DDS Formats"] = {
+			["tags"] = {
+				["Modding"] = true,
+			},
+			["ticket_num"] = 6,
+			["user"] = [=[]=],
+			["num_uses"] = 129,
+			["name"] = [=[DDS Formats]=],
+			["creation_time"] = 0,
+			["field"] = [=[**Total War: Warhammer 3 **
+
+**Paint.Net settings**
+* Base_colour, Material_map use BC1 (sRGB, DX 10+)
+* Mask, Normal use BC3 (Linear, DXT5)
+
+**Intel Texture Works v1.0.4 settings**
+* Base Colour use Color+Alpha (optional) and BC3 8bpp sRGB DX10+ Linear
+* Material_map use Color and BC1 4bpp (Linear)
+* Mask use Color+Alpha (optional) and BC3 8bpp Linear
+* Normal use Color+Alpha and BC3 8bpp Linear
+
+**Microsoft TexConv Comnand Line Tool (Support ALL DDS formats)**
+* Base Colour use: BC1_UNORM_SRGB
+* Material_map:  WH3: BC1_UNORM_SRGB  / 3K: BC3_UNORM
+* Mask;  WH3: BC1_UNORM  / 3K: BC3_UNORM_SRGB
+* Normal: BC3_UNORM
+Usage example (in CMD/Powershell)
+`c:\path_to_exe\texconv shield.PNG -f BC3_UNORM -o H:\existing_path\`
+
+Get full info/help for the tool:
+`c:\path_to_exe\texconv`
+
+If you're looking for older DDS Formats use /macro search Other DDS Formats]=],
 		},
 		["Update Schemas"] = {
 			["tags"] = {
@@ -716,7 +800,7 @@ https://cdn.discordapp.com/attachments/526071721472819210/813040183145791518/unk
 			},
 			["ticket_num"] = 57,
 			["user"] = [=[364410374688342018]=],
-			["num_uses"] = 3,
+			["num_uses"] = 4,
 			["name"] = [=[CMF]=],
 			["creation_time"] = 0,
 			["field"] = [=[DELETE COMMUNITY MODDING FRAMEWORK IF YOU HAVE IT ENABLED IT'S LAST BEEN UPDATED LIKE SEVENTY YEARS AGO]=],
@@ -726,23 +810,13 @@ https://cdn.discordapp.com/attachments/526071721472819210/813040183145791518/unk
 			},
 			["ticket_num"] = 16,
 			["user"] = [=[]=],
-			["num_uses"] = 14,
+			["num_uses"] = 16,
 			["name"] = [=[Tale of the Butt-Heart]=],
 			["creation_time"] = 0,
 			["field"] = [=[Many moons ago, Lost2Insanity was ~~raging~~ pointing out to CA that the giants in game have some clipping, particularly in their trouserware. Following several crude pictures, a CA employee responded with an early Valentine's Day card, and it has thrived ever since.
 
 https://cdn.discordapp.com/attachments/597937992773926962/837484024334778448/Screenshot_20210429-201800.jpg
 https://cdn.discordapp.com/attachments/597937992773926962/837484033192755230/Screenshot_20210429-201811.jpg]=],
-		},
-		["cathay"] = {
-			["tags"] = {
-			},
-			["ticket_num"] = 79,
-			["user"] = [=[164896718750613507]=],
-			["num_uses"] = 8,
-			["name"] = [=[cathay]=],
-			["creation_time"] = 0,
-			["field"] = [=[Cathay, both as a location and a sovereign state, has been a footnote for most of this setting's history. Mostly crammed with Ind under the couch cushions of Warhammer Fantasy until the advent of Total War Warhammer 3 as well as The Old World. What both Games Workshop and Creative Assembly have given us in narrative and world building is **neither comprehensive nor exhaustive**, and as a result this macro was triggered because we very likely do not know the answer to your question.]=],
 		},
 		["Ind"] = {
 			["tags"] = {
@@ -755,19 +829,16 @@ https://cdn.discordapp.com/attachments/597937992773926962/837484033192755230/Scr
 			["field"] = [=[Andy Hall, writer of Total War Warhammer 1, 2, 3, on the question of potential races such as Ind, Nippon, Amazons, the Moot, etcetera:
 "We're never gonna say never because there should always be the opportunity to bring these new races in or new nations, but you know I've seen the road map and these nations aren't on there now. There's no plans to do them in the immediate or even long-term future. We've still go so much to do with Cathay. Honestly the stuff I've seen it'll curl your toes in the best possible way. [...] People are kinda desperately hanging on for one of these other nations. [...] Don't lose any sleep, it's not happening anytime soon. Probably never, I'm afraid. Cathay was a brillant coup for us. Doesn't mean it's gonna be repeated."]=],
 		},
-		["Open All CA Packs"] = {
+		["Mod Troubleshooting Guide"] = {
 			["tags"] = {
+				["troubleshooting"] = true,
 			},
-			["ticket_num"] = 25,
+			["ticket_num"] = 11,
 			["user"] = [=[]=],
-			["num_uses"] = 5,
-			["name"] = [=[Open All CA Packs]=],
+			["num_uses"] = 25,
+			["name"] = [=[Mod Troubleshooting Guide]=],
 			["creation_time"] = 0,
-			["field"] = [=[**Note: Since RPFM v4.x, Open All CA Packs has been fully replaced with the Dependency Manager. Use the Dependencies window and navigate through "Game Files" and "Assembly Kit Files" to access vanilla data!**
-
-A useful tool to check vanilla data and file locations. When in RPFM, you can press PackFile -> "Load all CA PackFiles", or use Ctrl+G (if you haven't changed the shortcut), to open up all CA packfiles for the game selected. This'll allow you to take a look at vanilla files and where they might be.
-
-https://cdn.discordapp.com/attachments/636634459264909322/809864893422370816/unknown.png]=],
+			["field"] = [=[Read the mod troubleshooting guide at <https://tw-modding.com/index.php/Troubleshooting>]=],
 		},
 		["ulrika"] = {
 			["tags"] = {
@@ -779,34 +850,36 @@ https://cdn.discordapp.com/attachments/636634459264909322/809864893422370816/unk
 			["creation_time"] = 0,
 			["field"] = [=[SCM Ulrika will still show up in game, there will be options in MCT so you can chose to have two of them in game, to substitute CA's Ulrika for SCM's Ulrika, or have SCM's Ulrika not show up.For each Legendary character that there is a CA's version and a SCM's version these two options will be available in MCT.]=],
 		},
-		["DDS Formats"] = {
+		["the real macro"] = {
 			["tags"] = {
-				["Modding"] = true,
 			},
-			["ticket_num"] = 6,
-			["user"] = [=[]=],
-			["num_uses"] = 115,
-			["name"] = [=[DDS Formats]=],
+			["ticket_num"] = 58,
+			["user"] = [=[351546207551619072]=],
+			["num_uses"] = 7,
+			["name"] = [=[the real macro]=],
 			["creation_time"] = 0,
-			["field"] = [=[**Total War: Warhammer 3** 
-
-- **Paint.Net settings**
- - Base_colour, Material_map use BC1 (sRGB, DX 10+)
- - Mask, Normal use BC3 (Linear, DXT5)
-- **Intel Texture Works v1.0.4 settings**
- - Base Colour use Color+Alpha (optional) and BC3 8bpp sRGB DX10+ Linear
- - Material_map use Color and BC1 4bpp (Linear)
- - Mask use Color+Alpha (optional) and BC3 8bpp Linear
- - Normal use Color+Alpha and BC3 8bpp Linear
-
-Remember that you can save Presets. If you're looking for older DDS Formats use `/macro search Other DDS Formats`]=],
+			["field"] = [=[the real macro would be STOP FUCKING USING COLLECTIONS FROM 2017]=],
+		},
+		["troglagob"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 5,
+			["user"] = [=[]=],
+			["num_uses"] = 36,
+			["name"] = [=[troglagob]=],
+			["creation_time"] = 0,
+			["field"] = {
+				[2] = [=[https://www.youtube.com/watch?v=uPmNlnGNEqw]=],
+				[3] = [=[https://www.youtube.com/watch?v=wEpJU3xqeSE]=],
+				[4] = [=[https://www.youtube.com/watch?v=_OFN2Uztp34]=],
+			},
 		},
 		["Script Debugger"] = {
 			["tags"] = {
 			},
 			["ticket_num"] = 9,
 			["user"] = [=[]=],
-			["num_uses"] = 52,
+			["num_uses"] = 53,
 			["name"] = [=[Script Debugger]=],
 			["creation_time"] = 0,
 			["field"] = [=[**Lua Script Logging:** 
@@ -828,15 +901,18 @@ WH2: <https://steamcommunity.com/sharedfiles/filedetails/?id=1271877744>]=],
 			["creation_time"] = 0,
 			["field"] = [=[If you're experiencing crashes when opening up the recruitment menu, you probably have modded saved characters that are referencing mods you're not currently using. To fix this, go to your File Explorer, then go to AppData/Roaming/The Creative Assembly/Warhammer3/saved_characters. Highlight everything within, delete it, and you should be good to go!]=],
 		},
-		["moddata"] = {
+		["Load Order"] = {
 			["tags"] = {
+				["troubleshooting"] = true,
 			},
-			["ticket_num"] = 74,
-			["user"] = [=[308754289352900608]=],
-			["num_uses"] = 13,
-			["name"] = [=[moddata]=],
+			["ticket_num"] = 28,
+			["user"] = [=[]=],
+			["num_uses"] = 25,
+			["name"] = [=[Load Order]=],
 			["creation_time"] = 0,
-			["field"] = [=[If you're having problems with getting mods to load at all in your game, you might have launcher sickness. You can cure launcher sickness by going to /%appdata%/The Creative Assembly/Launcher/ and deleting the moddata.dat file that can be found there. This will force the launcher to rebuild the file on the next launch, which usually fixes most launcher issues.]=],
+			["field"] = [=[Q: Should I edit the load order?
+
+A: https://tenor.com/view/shaq-dont-dont-do-it-no-nope-gif-4384713]=],
 		},
 		["Scripting Events"] = {
 			["tags"] = {
@@ -844,73 +920,42 @@ WH2: <https://steamcommunity.com/sharedfiles/filedetails/?id=1271877744>]=],
 			},
 			["ticket_num"] = 18,
 			["user"] = [=[]=],
-			["num_uses"] = 15,
+			["num_uses"] = 16,
 			["name"] = [=[Scripting Events]=],
 			["creation_time"] = 0,
 			["field"] = [=[To get to the scripting documentation about events (to use with listeners) and interfaces (which are passed around through events or other means), use the "Events & Interfaces" link for the relevant game in https://chadvandy.github.io/tw_modding_resources/index.html
 
 The page it'll take you to will list first all of the event names valid for core:add_listener(), and then each event will have a list of valid interfaces that are linked through the "context" of the event, ie. "context:faction()" for "FactionTurnStart".]=],
 		},
-		["Load Order"] = {
+		["Disable pings"] = {
 			["tags"] = {
-				["troubleshooting"] = true,
 			},
-			["ticket_num"] = 28,
-			["user"] = [=[]=],
-			["num_uses"] = 24,
-			["name"] = [=[Load Order]=],
+			["ticket_num"] = 50,
+			["user"] = [=[234019992197136384]=],
+			["num_uses"] = 94,
+			["name"] = [=[Disable pings]=],
 			["creation_time"] = 0,
-			["field"] = [=[Q: Should I edit the load order?
-
-A: https://tenor.com/view/shaq-dont-dont-do-it-no-nope-gif-4384713]=],
+			["field"] = [=[Please disable pings when quoting and it's not an urgent matter. Many users can be annoyed by unnecessary notifications when all you're doing is referencing a message. No, it can't be disabled by default, blame discord. But if you're on PC, hold shift while clicking the reply button to disable the ping. https://cdn.discordapp.com/attachments/373745291289034765/778933419547295744/unknown.png]=],
 		},
-		["troglagob"] = {
+		["dependencies"] = {
 			["tags"] = {
 			},
-			["ticket_num"] = 5,
-			["user"] = [=[]=],
-			["num_uses"] = 34,
-			["name"] = [=[troglagob]=],
+			["ticket_num"] = 84,
+			["user"] = [=[234019992197136384]=],
+			["num_uses"] = 7,
+			["name"] = [=[dependencies]=],
 			["creation_time"] = 0,
-			["field"] = {
-				[2] = [=[https://www.youtube.com/watch?v=uPmNlnGNEqw]=],
-				[3] = [=[https://www.youtube.com/watch?v=wEpJU3xqeSE]=],
-				[4] = [=[https://www.youtube.com/watch?v=_OFN2Uztp34]=],
-			},
+			["field"] = [=[https://cdn.discordapp.com/attachments/1009136110754074624/1030507555417493504/6d76w6.png]=],
 		},
 		["priority"] = {
 			["tags"] = {
 			},
 			["ticket_num"] = 88,
 			["user"] = [=[312710717751164929]=],
-			["num_uses"] = 16,
+			["num_uses"] = 18,
 			["name"] = [=[priority]=],
 			["creation_time"] = 0,
 			["field"] = [=[Overwrite priority order ! # $ % & ‘ ( ) + , – ; = @ 0-9 a-z [ ] ^ _ ` { } ~ Where “!” wins over “a”.]=],
-		},
-		["RPFM"] = {
-			["tags"] = {
-				["modding tools"] = true,
-				["Modding"] = true,
-			},
-			["ticket_num"] = 12,
-			["user"] = [=[]=],
-			["num_uses"] = 17,
-			["name"] = [=[RPFM]=],
-			["creation_time"] = 0,
-			["field"] = [=[Rusted Pack File Manager (#rpfm) is a way better tool for creating and editing mods than any other option currently available, and you should:
-https://c.tenor.com/LUOHdYdROZQAAAAM/just-do-it-shia-la-beouf.gif]=],
-		},
-		["Sort Mods by Recently Updated"] = {
-			["tags"] = {
-				["troubleshooting"] = true,
-			},
-			["ticket_num"] = 20,
-			["user"] = [=[]=],
-			["num_uses"] = 7,
-			["name"] = [=[Sort Mods by Recently Updated]=],
-			["creation_time"] = 0,
-			["field"] = [=[Sometimes it's important to see what mod recently updated! To check which have recently updated, go to the Steam Workshop page for WH2: <https://steamcommunity.com/app/594570/workshop/>. When there, on the right you'll see "Your Workshop Files | Your Files". Hover over the latter and switch it to "Subscribed Items". On the page that files, you'll see a list of mods you have subscribed. On the right, it'll say "Subscribed Items | Date Subscribed". Click Date Subscribed, change it to Date Updated, and Steam will sort your mods by the most recently updated!]=],
 		},
 		["Playing Unmodded"] = {
 			["tags"] = {
@@ -928,81 +973,6 @@ https://c.tenor.com/LUOHdYdROZQAAAAM/just-do-it-shia-la-beouf.gif]=],
 3) Next, you'll need to tidy up the other mod files hanging around in the data directory (stray .pngs can also cause a "Modded!" warning). Despite all these mods not being enabled, they can sometimes interfere with the finicky process. Again, KMM has a handy Clean Data button for this. Don't click Refresh after it's done, or that'll bring all the mods back.
 4), and most importantly, to play pure unmodded you must use the CA launcher.]=],
 		},
-		["tmb_elf"] = {
-			["tags"] = {
-			},
-			["ticket_num"] = 85,
-			["user"] = [=[312710717751164929]=],
-			["num_uses"] = 22,
-			["name"] = [=[tmb_elf]=],
-			["creation_time"] = 0,
-			["field"] = {
-				[2] = [=[Tomb kings relation with elves: https://imgur.com/a/ep0d69O]=],
-				[3] = [=[Tomb kings relation with elves: https://imgur.com/a/UyhYJGA]=],
-			},
-		},
-		["art set"] = {
-			["tags"] = {
-			},
-			["ticket_num"] = 73,
-			["user"] = [=[331428721556848641]=],
-			["num_uses"] = 7,
-			["name"] = [=[art set]=],
-			["creation_time"] = 0,
-			["field"] = [=[The current placeholder art set in Warhammer 3 belongs to Kostaltyn. You might see this for your custom characters due to:
-- Art set has culture/subculture/faction checks in campaign_character_art_sets_tables that prevents it to be used with another culture/subculture/faction.
-- Wrong gender in campaign_character_art_sets_tables.Gender is defined in agent culture details table, CA usually has this set to female for their female characters, for some reason.
-- ID in campaign_character_arts_tables is already used by another art set, could be vanilla art set or a modded one. ID has to be unique anyway.]=],
-		},
-		["Scripted Victory Conditions"] = {
-			["tags"] = {
-				["scripting"] = true,
-			},
-			["ticket_num"] = 32,
-			["user"] = [=[364410374688342018]=],
-			["num_uses"] = 6,
-			["name"] = [=[Scripted Victory Conditions]=],
-			["creation_time"] = 0,
-			["field"] = [=[Groove Wizard has to write up a proper tutorial for this, but for now you can read an overview at https://discord.com/channels/373745291289034763/419987321585270784/805952675857825795]=],
-		},
-		["officers"] = {
-			["tags"] = {
-			},
-			["ticket_num"] = 21,
-			["user"] = [=[]=],
-			["num_uses"] = 17,
-			["name"] = [=[officers]=],
-			["creation_time"] = 0,
-			["field"] = [=[Land Unit Officer types: Officers and Musicians work with some limits. Musicians may not use missile weapons (working cases TBD). Standard Bearers will crash depending on sides, just don't use them. These entities can have their own distinct variants, entities, animations, both weapons. Avoid adding battle entity hp because it causes a multiplicative bug after campaign battles. They will not use missile weapons unless the land unit can. officer related ability usage keys are currently unlikely to work. Keep in mind officers as a whole are legacy code hanging on for dear life and are inherently not supported for WH2 outside of chariot/character stuff.]=],
-		},
-		["Mod Priority"] = {
-			["tags"] = {
-			},
-			["ticket_num"] = 83,
-			["user"] = [=[364410374688342018]=],
-			["num_uses"] = 17,
-			["name"] = [=[Mod Priority]=],
-			["creation_time"] = 0,
-			["field"] = [=[There are two parts of priority when it comes to loading mods. Let's start out by saying that **users should never be told to manually edit load order**, modders should really handle all load order and priority on their own end. 
-
-"Priority" means which file gets loaded in what order, and it's determined by default by the name of files. 
-
-The primary form of priority - *pack file priority* - is determined by the actual .pack file names - this is the load order determined in the mod launcher (again, seriously, don't edit). **All this load order determines is which version of a same-named file is loaded.** If two mods both have a file named `text/my_example_text.loc`, the mod with the higher load order will have that version of my_example_text.loc loaded; the other one is completely discarded.
-
-The other type of priority - *individual table priority* - is determined by the name of **individual file names within a .pack**. Individual table priority determines **which version of a key is used within a db or loc file**. If two mods both edit the localised text for `land_units_onscreen_name_my_example_unit`, one of them using a .loc file called `text/db/!my_text.loc`, the other using `text/db/zzz_my_text.loc`, the former will take priority and the localised text set in that mod will be used. **Individual table priority will NEVER be affected by pack file priority**.
-
-Pack file priority works the way it does because the contents of every single loaded .pack file - CA and modded - are loaded into a virtual filesystem, and a filesystem can't have any files that share the same name and path. Individual table priority works the way it does because when the game is loading at the very start (before the intro movie and CA splash screen are triggered) the individual db and loc files are read and turned into memory that the game can access, and higher priority files are overriding previous bits of memory set by lower priority files.]=],
-		},
-		["spotting and hiding"] = {
-			["tags"] = {
-			},
-			["ticket_num"] = 60,
-			["user"] = [=[308754289352900608]=],
-			["num_uses"] = 4,
-			["name"] = [=[spotting and hiding]=],
-			["creation_time"] = 0,
-			["field"] = [=[**Spotting and Hiding Values**Maximum spotting range determines what range you can spot a unit with a hiding scalar of 1. Multiply this value by the hiding scalar of an enemy unit to find what range you can see it at.For example, if spotting range is 300, you can see a 0.5 hiding scalar unit at 150 units, and a 2.0 hiding scalar unit at 600 units.Minimum spotting range determines what range you will spot any unit regardless of its hiding scalar or stalk.Scrub and Tree spotting distance determine what range you will spot a unit using the hide in trees or hide in scrub attribute.The values in land units tables are ignored if a spotting and hiding group (spotting_and_hiding_values_tables) is set. (Note: should be accurate at least up to WH2, testing was done in Attila).]=],
-		},
 		["pasta"] = {
 			["tags"] = {
 			},
@@ -1017,12 +987,113 @@ Pack file priority works the way it does because the contents of every single lo
 3. Model has issues in-game and in AssetEditor => You probably forgot to re-rig some meshes. (warnings are there for a reason!)
 4. None of the above and everything looks fine in AssetEditor, but nothing looks good in game => Probably incompatible animation set selected in-game]=],
 		},
+		["art set"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 73,
+			["user"] = [=[331428721556848641]=],
+			["num_uses"] = 7,
+			["name"] = [=[art set]=],
+			["creation_time"] = 0,
+			["field"] = [=[The current placeholder art set in Warhammer 3 belongs to Kostaltyn. You might see this for your custom characters due to:
+- Art set has culture/subculture/faction checks in campaign_character_art_sets_tables that prevents it to be used with another culture/subculture/faction.
+- Wrong gender in campaign_character_art_sets_tables.Gender is defined in agent culture details table, CA usually has this set to female for their female characters, for some reason.
+- ID in campaign_character_arts_tables is already used by another art set, could be vanilla art set or a modded one. ID has to be unique anyway.]=],
+		},
+		["tmb_elf"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 85,
+			["user"] = [=[312710717751164929]=],
+			["num_uses"] = 25,
+			["name"] = [=[tmb_elf]=],
+			["creation_time"] = 0,
+			["field"] = {
+				[2] = [=[Tomb kings relation with elves: https://imgur.com/a/ep0d69O]=],
+				[3] = [=[Tomb kings relation with elves: https://imgur.com/a/UyhYJGA]=],
+			},
+		},
+		["Campaign Difficulty"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 116,
+			["user"] = [=[]=],
+			["num_uses"] = 1,
+			["name"] = [=[Campaign Difficulty]=],
+			["creation_time"] = 0,
+			["field"] = [=[-3 is Legendary, -2 Very Hard, -1 Hard, 0 Normal, and 1 Easy. If human is unchecked (so the bonuses are only applying to the AI factions) -1 is Easy, 0 is Normal, 1 is Hard, 2 is Very Hard, and 3 is Legendary]=],
+		},
+		["Sort Mods by Recently Updated"] = {
+			["tags"] = {
+				["troubleshooting"] = true,
+			},
+			["ticket_num"] = 20,
+			["user"] = [=[]=],
+			["num_uses"] = 7,
+			["name"] = [=[Sort Mods by Recently Updated]=],
+			["creation_time"] = 0,
+			["field"] = [=[Sometimes it's important to see what mod recently updated! To check which have recently updated, go to the Steam Workshop page for WH2: <https://steamcommunity.com/app/594570/workshop/>. When there, on the right you'll see "Your Workshop Files | Your Files". Hover over the latter and switch it to "Subscribed Items". On the page that files, you'll see a list of mods you have subscribed. On the right, it'll say "Subscribed Items | Date Subscribed". Click Date Subscribed, change it to Date Updated, and Steam will sort your mods by the most recently updated!]=],
+		},
+		["Scripted Victory Conditions"] = {
+			["tags"] = {
+				["scripting"] = true,
+			},
+			["ticket_num"] = 32,
+			["user"] = [=[364410374688342018]=],
+			["num_uses"] = 7,
+			["name"] = [=[Scripted Victory Conditions]=],
+			["creation_time"] = 0,
+			["field"] = [=[Groove Wizard has to write up a proper tutorial for this, but for now you can read an overview at https://discord.com/channels/373745291289034763/419987321585270784/805952675857825795]=],
+		},
+		["function() not found, continuing"] = {
+			["tags"] = {
+				["scripting"] = true,
+			},
+			["ticket_num"] = 35,
+			["user"] = [=[]=],
+			["num_uses"] = 4,
+			["name"] = [=[function() not found, continuing]=],
+			["creation_time"] = 0,
+			["field"] = [=[If you're using the CA Script Loader (ie., plopping your stuff into script/campaign/mod/?.lua), and you check the lua_mod_log.txt or script_log_xxx.txt file, it may say something like "Executing Mods ... yourfilename() not found, continuing".
+
+If you've done it right, that's a non-issue. The way the script loader works, it **searches the global environment for any function named the same as your .lua file**. So if you have a script called "mysweetscript.lua", it searches for any function named "mysweetscript()". If it doesn't find anything, it skips it. 
+
+But you shouldn't use this method, since it'll quickly take hostage many default file or function names. If you initialize your script with `cm:add_first_tick_callback()` or through `core:add_listener()`, you're fine, ignore this error message. If you don't - initialize your script that way!]=],
+		},
+		["spotting and hiding"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 60,
+			["user"] = [=[308754289352900608]=],
+			["num_uses"] = 4,
+			["name"] = [=[spotting and hiding]=],
+			["creation_time"] = 0,
+			["field"] = [=[**Spotting and Hiding Values**Maximum spotting range determines what range you can spot a unit with a hiding scalar of 1. Multiply this value by the hiding scalar of an enemy unit to find what range you can see it at.For example, if spotting range is 300, you can see a 0.5 hiding scalar unit at 150 units, and a 2.0 hiding scalar unit at 600 units.Minimum spotting range determines what range you will spot any unit regardless of its hiding scalar or stalk.Scrub and Tree spotting distance determine what range you will spot a unit using the hide in trees or hide in scrub attribute.The values in land units tables are ignored if a spotting and hiding group (spotting_and_hiding_values_tables) is set. (Note: should be accurate at least up to WH2, testing was done in Attila).]=],
+		},
+		["Mod Priority"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 83,
+			["user"] = [=[364410374688342018]=],
+			["num_uses"] = 19,
+			["name"] = [=[Mod Priority]=],
+			["creation_time"] = 0,
+			["field"] = [=[There are two parts of priority when it comes to loading mods. Let's start out by saying that **users should never be told to manually edit load order**, modders should really handle all load order and priority on their own end. 
+
+"Priority" means which file gets loaded in what order, and it's determined by default by the name of files. 
+
+The primary form of priority - *pack file priority* - is determined by the actual .pack file names - this is the load order determined in the mod launcher (again, seriously, don't edit). **All this load order determines is which version of a same-named file is loaded.** If two mods both have a file named `text/my_example_text.loc`, the mod with the higher load order will have that version of my_example_text.loc loaded; the other one is completely discarded.
+
+The other type of priority - *individual table priority* - is determined by the name of **individual file names within a .pack**. Individual table priority determines **which version of a key is used within a db or loc file**. If two mods both edit the localised text for `land_units_onscreen_name_my_example_unit`, one of them using a .loc file called `text/db/!my_text.loc`, the other using `text/db/zzz_my_text.loc`, the former will take priority and the localised text set in that mod will be used. **Individual table priority will NEVER be affected by pack file priority**.
+
+Pack file priority works the way it does because the contents of every single loaded .pack file - CA and modded - are loaded into a virtual filesystem, and a filesystem can't have any files that share the same name and path. Individual table priority works the way it does because when the game is loading at the very start (before the intro movie and CA splash screen are triggered) the individual db and loc files are read and turned into memory that the game can access, and higher priority files are overriding previous bits of memory set by lower priority files.]=],
+		},
 		["hydrate"] = {
 			["tags"] = {
 			},
 			["ticket_num"] = 22,
 			["user"] = [=[164896718750613507]=],
-			["num_uses"] = 69,
+			["num_uses"] = 70,
 			["name"] = [=[hydrate]=],
 			["creation_time"] = 0,
 			["field"] = {
@@ -1041,7 +1112,7 @@ Pack file priority works the way it does because the contents of every single lo
 			},
 			["ticket_num"] = 30,
 			["user"] = [=[]=],
-			["num_uses"] = 31,
+			["num_uses"] = 43,
 			["name"] = [=[Script Docs]=],
 			["creation_time"] = 0,
 			["field"] = [=[The scripting documentation (located at <https://chadvandy.github.io/tw_modding_resources/index.html>, or within Total War WARHAMMER III/assembly_kit/Documentation/script, if you have the AK downloaded) is auto-generated through game processes, and it might seem a little convoluted to use - so this is a quick tutorial on how to use it!
@@ -1058,21 +1129,6 @@ Some important fun facts:
 - For campaign functions, check "Campaign Manager" and "Episodic Scripting". If some function is present in both, use the Campaign Manager version.
 - You can use the search bar to find some shtuff, like typing in "unit" to find the command "remove_unit_from_character".]=],
 		},
-		["function() not found, continuing"] = {
-			["tags"] = {
-				["scripting"] = true,
-			},
-			["ticket_num"] = 35,
-			["user"] = [=[]=],
-			["num_uses"] = 4,
-			["name"] = [=[function() not found, continuing]=],
-			["creation_time"] = 0,
-			["field"] = [=[If you're using the CA Script Loader (ie., plopping your stuff into script/campaign/mod/?.lua), and you check the lua_mod_log.txt or script_log_xxx.txt file, it may say something like "Executing Mods ... yourfilename() not found, continuing".
-
-If you've done it right, that's a non-issue. The way the script loader works, it **searches the global environment for any function named the same as your .lua file**. So if you have a script called "mysweetscript.lua", it searches for any function named "mysweetscript()". If it doesn't find anything, it skips it. 
-
-But you shouldn't use this method, since it'll quickly take hostage many default file or function names. If you initialize your script with `cm:add_first_tick_callback()` or through `core:add_listener()`, you're fine, ignore this error message. If you don't - initialize your script that way!]=],
-		},
 		["local variables"] = {
 			["tags"] = {
 			},
@@ -1088,27 +1144,37 @@ But you shouldn't use this method, since it'll quickly take hostage many default
 			},
 			["ticket_num"] = 87,
 			["user"] = [=[155800292477239305]=],
-			["num_uses"] = 5,
+			["num_uses"] = 6,
 			["name"] = [=[help]=],
 			["creation_time"] = 0,
 			["field"] = [=[Wrong way around! You need to do ?help macro]=],
 		},
-		["Disable pings"] = {
+		["officers"] = {
 			["tags"] = {
 			},
-			["ticket_num"] = 50,
-			["user"] = [=[234019992197136384]=],
-			["num_uses"] = 74,
-			["name"] = [=[Disable pings]=],
+			["ticket_num"] = 21,
+			["user"] = [=[]=],
+			["num_uses"] = 19,
+			["name"] = [=[officers]=],
 			["creation_time"] = 0,
-			["field"] = [=[Please disable pings when quoting and it's not an urgent matter. Many users can be annoyed by unnecessary notifications when all you're doing is referencing a message. No, it can't be disabled by default, blame discord. But if you're on PC, hold shift while clicking the reply button to disable the ping. https://cdn.discordapp.com/attachments/373745291289034765/778933419547295744/unknown.png]=],
+			["field"] = [=[Land Unit Officer types: Officers and Musicians work with some limits. Musicians may not use missile weapons (working cases TBD). Standard Bearers will crash depending on sides, just don't use them. These entities can have their own distinct variants, entities, animations, both weapons. Avoid adding battle entity hp because it causes a multiplicative bug after campaign battles. They will not use missile weapons unless the land unit can. officer related ability usage keys are currently unlikely to work. Keep in mind officers as a whole are legacy code hanging on for dear life and are inherently not supported for WH2 outside of chariot/character stuff.]=],
+		},
+		["moddata"] = {
+			["tags"] = {
+			},
+			["ticket_num"] = 74,
+			["user"] = [=[308754289352900608]=],
+			["num_uses"] = 13,
+			["name"] = [=[moddata]=],
+			["creation_time"] = 0,
+			["field"] = [=[If you're having problems with getting mods to load at all in your game, you might have launcher sickness. You can cure launcher sickness by going to /%appdata%/The Creative Assembly/Launcher/ and deleting the moddata.dat file that can be found there. This will force the launcher to rebuild the file on the next launch, which usually fixes most launcher issues.]=],
 		},
 		["EULA"] = {
 			["tags"] = {
 			},
 			["ticket_num"] = 90,
 			["user"] = [=[312710717751164929]=],
-			["num_uses"] = 5,
+			["num_uses"] = 10,
 			["name"] = [=[EULA]=],
 			["creation_time"] = 0,
 			["field"] = [=[End User License Agreement (EULA) is the contract you sign when putting your mods in the steam workshop. The legal way to publish mods is by using the steam workshop, mod.io, and epic game store. Mods can't use assets from other Intellectual Property(IP) this include other Games Workshop IP like 40k, Age of Sigmar and Old World. Grounds for being deleted from the workshop include mods that are: discriminatory, racist, obscene, libelous, offensive, illegal, defamatory, inappropriate, invasive. You can't use assets from other total war games and import them to total war warhammer, except animations when they make sense in the warhammer world.These restriction doesn't apply to Creative Assembly.You can find the relevant part to modding under MODDING TERMS in <https://store.steampowered.com/eula/364360_eula_0>]=],

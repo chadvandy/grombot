@@ -1,5 +1,5 @@
 #The secret token of Gromby. No steal.
-.token
+*.token
 
 #Logs and DB files.
 discordia.log

@@ -19,7 +19,7 @@ return {
 			},
 		},
 		[3] = {
-			["desc"] = [=[Notifications for Cataph\'s Closer to Tabletop mod (<#375747157732491274>)]=],
+			["desc"] = [=[Notifications for Cataph\'s mods (<#373754902608084994>)]=],
 			["id"] = [=[527984494221721621]=],
 			["visible"] = true,
 			["reaction"] = [=[caged:385182375270678548]=],
@@ -116,6 +116,42 @@ return {
 			},
 			["name"] = [=[Kaedrin Mod Manager]=],
 			["reaction"] = [=[siggy:442243620859412484]=],
+		},
+		[14] = {
+			["desc"] = [=[Notifications for ChaosRobie's "Immortal Empires Map Expansion" mods and whatever else deemed appropriate!]=],
+			["id"] = [=[1135916808587706418]=],
+			["visible"] = true,
+			["name"] = [=[Chaos Notif]=],
+			["reaction"] = [=[]=],
+			["owner"] = {
+			},
+		},
+		[15] = {
+			["desc"] = [=[Notifications for the Nagash mod! (<#1000830194485043335>)]=],
+			["id"] = [=[1147350816726982696]=],
+			["visible"] = true,
+			["owner"] = {
+			},
+			["reaction"] = [=[]=],
+			["name"] = [=[Wannabe Mortarch]=],
+		},
+		[16] = {
+			["desc"] = [=[Notifications for Skeleton Crew mods! <#1008765251208089660>]=],
+			["id"] = [=[1027011599283781712]=],
+			["visible"] = true,
+			["reaction"] = [=[]=],
+			["name"] = [=[Skeleton Crew Notif]=],
+			["owner"] = {
+			},
+		},
+		[17] = {
+			["desc"] = [=[Notifications for the Nippon Bladelords project.]=],
+			["id"] = [=[1231545100459573248]=],
+			["visible"] = true,
+			["owner"] = {
+			},
+			["name"] = [=[Bladelords Notif]=],
+			["reaction"] = [=[]=],
 		},
 	},
 }

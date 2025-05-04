@@ -278,30 +278,32 @@ client:once('ready', function()
 
 	discordia.storage.MacroManager:init()
 
-	-- edit reaction msg
-	do
-		local ok, err = pcall(function()
-			edit_reaction_msg()
-			-- local cnc = client:getGuild("373745291289034763")
+	-- -- edit reaction msg
+	-- do
+	-- 	local ok, err = pcall(function()
+	-- 		edit_reaction_msg()
+	-- 		-- local cnc = client:getGuild("373745291289034763")
 
-			-- local rules = cnc:getChannel("373746683537915913")
-			-- ---@cast rules GuildTextChannel
-			-- local reaction_msg = rules:getMessage("617129472583270400")
+	-- 		-- local rules = cnc:getChannel("373746683537915913")
+	-- 		-- ---@cast rules GuildTextChannel
+	-- 		-- local reaction_msg = rules:getMessage("617129472583270400")
 
-			-- local is, erro = validate_embed(get_rules_react_msg())
-			-- if not is then
-			-- 	log_me("Embed is incorrect, error is: " .. erro)
-			-- end
+	-- 		-- local is, erro = validate_embed(get_rules_react_msg())
+	-- 		-- if not is then
+	-- 		-- 	log_me("Embed is incorrect, error is: " .. erro)
+	-- 		-- end
 
-			-- log_me("React msg embed is: " .. tostring(get_rules_react_msg()))
+	-- 		-- log_me("React msg embed is: " .. tostring(get_rules_react_msg()))
 
-			-- reaction_msg:setEmbed({title="TESTING", fields = {{name="TESTING", value="MORE TESTS"}}})
-			-- reaction_msg:setEmbed(get_rules_react_msg())
-		end) if not ok then log_me("Error: " .. err) end
-	end
+	-- 		-- reaction_msg:setEmbed({title="TESTING", fields = {{name="TESTING", value="MORE TESTS"}}})
+	-- 		-- reaction_msg:setEmbed(get_rules_react_msg())
+	-- 	end) if not ok then log_me("Error: " .. err) end
+	-- end
 
 	local fn = make_safe(function() check_reminders() check_admin() end)
 
+	-- Every 1000ms (or 1s), check if reminders need to be sent or if anyone needs to be
+	-- unmuted.
 	TIMER.setInterval(1000, fn)
 	
 	for i = 1, #ready_functions do
@@ -402,6 +404,15 @@ client:on(
 	end
 )
 
+local flypaper = {
+	channel_id = "1244666047173230673",
+	messages = {
+		killcount_id = "1244666649001459755",
+		intro_id = "",
+	},
+	killcount_string = "Current Kill Count: ",
+	logging_channel_id = "650311653388320778",
+}
 client:on('messageCreate',
 	---@param message Message
 	function(message)
@@ -421,18 +432,57 @@ client:on('messageCreate',
 			return
 		end
 
-		-- test if someone pinged Mixu in the Mixu channel.
-		if channel_id == "466624302897430530" and message.mentionedUsers:get("331428721556848641") then
-			local macro = discordia.storage.MacroManager:get_macro("PingMixu")
+		-- Interception here to detect someone posting in the BotCatcher channel.
+		-- We'll swat em, then bring up the kill count by 1 and cheer.
+		if channel_id == flypaper.channel_id then
+			-- Grab the message and get the current count of kills from it.
+			local kill_count_msg = channel:getMessage(flypaper.messages.killcount_id)
+			local kill_count = tonumber((string.gsub(kill_count_msg.content, flypaper.killcount_string, "")))
+			if not kill_count then kill_count = 0 end
 
-			local response = channel:send {
-				content = macro:get_field(),
-				reference = {
-					message = message.id,
-					mention = false,
-				}
-			}
+			local guild = message.guild
+			local bug_member = message.member
+
+			---@cast bug_member Member
+			---@cast guild Guild
+
+			local grom_member = guild:getMember(client.user.id)
+			
+			
+			-- Increase the kill count and actually ban the goober.
+			if bug_member:hasRole("448858138565672990") then
+				-- pretend to ban
+				message:reply("I won't actually ban you, administrator.")
+			else
+				bug_member:ban("Bot stuck on the flypaper.")
+			end
+
+			---@type GuildTextChannel
+			local notify_channel = guild:getChannel(flypaper.logging_channel_id)
+			notify_channel:send("Bot swatted in the flypaper! Original message:")
+			notify_channel:send(message.content)
+
+			admin_operation_notify("Ban", bug_member, grom_member, "Flypaper!", nil, nil)
+
+			message:delete()
+					
+			kill_count = kill_count + 1
+			kill_count_msg:setContent(flypaper.killcount_string .. kill_count)
 		end
+
+
+		-- -- test if someone pinged Mixu in the Mixu channel.
+		-- if channel_id == "466624302897430530" and message.mentionedUsers:get("331428721556848641") then
+		-- 	local macro = discordia.storage.MacroManager:get_macro("PingMixu")
+
+		-- 	local response = channel:send {
+		-- 		content = macro:get_field(),
+		-- 		reference = {
+		-- 			message = message.id,
+		-- 			mention = false,
+		-- 		}
+		-- 	}
+		-- end
 	end
 )
 

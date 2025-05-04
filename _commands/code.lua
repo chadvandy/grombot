@@ -41,11 +41,18 @@ local code = CM:new_command(
         local str = table.concat(lines, "\n")
         if str and str ~= "" then
             _G.print("TEST")
-            if string.len(str) <= 1000 then
-                local ok, err = message:reply(str)
-                if not ok then errmsg(err) end
-            end
-
+            -- if string.len(str) <= 1000 then
+            --     local ok, err = message:reply(str)
+            --     if not ok then errmsg(err) end
+            -- else
+                for i = 1, string.len(str), 1000 do
+                    local str_sub = str:sub(i, i + 999)
+                    local ok, err = message:reply(str_sub)
+                    if not ok then 
+                        errmsg(err .. "\n" .. str_sub)
+                    end
+                end
+            -- end
             return
         end
 

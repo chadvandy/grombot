@@ -14,6 +14,10 @@ Command:set_global(true)
 Command:set_moderator_only()
 
 do
+    -- TODO ban / kick / delete / timeout / etc.
+end
+
+do
     local Roles = Command:add_subcommand_group("roles", "Admin commands regarding Notification Roles and other Roles systems.")
 
     local function get_role_data_with_id(id)
@@ -147,6 +151,8 @@ do
             }
 
             save_data("roles")
+
+            int:reply("Nice! Added it!", true)
         end)
     end
 end

@@ -39,13 +39,17 @@ local function get_all_role_choices()
     ---@type {name: string, value:string}[]
     local all_role_choices = {}
     for _, role in ipairs(all_roles) do
-        -- inform("Found a single role!")
+        -- inform("Found a single role! Name is " .. role.name)
         local role_obj = get_role_with_id(role.id)
+
+        if not role_obj then
+            inform("Could not find the role object for reaction role " .. role.name)
+        end
 
         if role.visible and role_obj then
             all_role_choices[#all_role_choices+1] = {
                 name = role_obj.name,
-                value = role.id
+                value = role_obj.id
             }
         end
     end
@@ -103,6 +107,31 @@ Command:add_subcommand("all", "Show all Notification Roles.")
     end
 )
 
+
+local function search_for_role(int, data, value)
+    local choices = {}
+
+    local srch = string.lower(value)
+
+    -- print("Checking search string: " .. srch)
+
+    for _, role in ipairs(all_roles) do
+        local role_obj = get_role_with_id(role.id)
+        local role_name = role_obj.name
+        local comp = string.lower(role_name)
+        -- print("Comparing against " .. comp)
+
+        if string.find(comp, srch) then
+            choices[#choices+1] = {
+                name = role_name,
+                value = role.id,
+            }
+        end
+    end
+
+    return choices
+end
+
 do
     local Add = Command:add_subcommand("add", "Add a new role!")
     do
@@ -110,23 +139,40 @@ do
 
         opt:set_type("STRING")
         opt:set_required(true)
-        opt:set_option_choices(get_all_role_choices())
+        -- opt:set_option_choices(get_all_role_choices())
+        opt:set_autocomplete(true)
+        opt:set_on_autocomplete(search_for_role)
     end
 
     Add:set_callback(function (int, args)
         local member = int.member
         local role_id = args.role
 
-        if member then
-            local role = int.guild:getRole(role_id)
-            local ok, err = member:addRole(role_id)
+        if role_id == nil then
+            errmsg("Trying to add role to member, but the role called is nil!")
+            return
+        end
 
-            if ok then
-                int:reply("Added role " .. role.mentionString .. "!", true)
-            else
-                int:reply("Error while adding role: \n" .. err, true)
-                errmsg("Error while adding role: " .. err)
-            end
+        if member == nil then
+            errmsg("Trying to add role to member, but the member is nil!")
+            return
+        end
+
+        local role = int.guild:getRole(role_id) 
+
+        if not role then
+            errmsg("Trying to add role w/ ID " .. tostring(role_id) .. ", but it doesn't exist!")
+            return
+        end
+
+
+        local ok, err = member:addRole(role_id)
+
+        if ok then
+            int:reply("Added role " .. role.mentionString .. "!", true)
+        else
+            int:reply("Error while adding role: \n" .. err, true)
+            errmsg("Error while adding role: " .. err)
         end
     end)
 end
@@ -138,7 +184,9 @@ do
         local opt = Remove:create_option("role", "Role to add!")
         opt:set_type("STRING")
         opt:set_required(true)
-        opt:set_option_choices(get_all_role_choices())
+        -- opt:set_option_choices(get_all_role_choices())
+        opt:set_autocomplete(true)
+        opt:set_on_autocomplete(search_for_role)
     end
 
     Remove:set_callback(function (int, args)

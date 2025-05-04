@@ -21,14 +21,77 @@ GUILDS_AND_STUFF = {
 local typing = require("type_checking")
 local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
 
+local randomized = false
 function _G.flush_random()
-    math.randomseed(os.time())
+    if not randomized then
+        math.randomseed(os.time())
     
-    math.random()
-    math.random()
-    math.random()
-    math.random()
-    math.random()
+        math.random()
+        math.random()
+        math.random()
+        math.random()
+        math.random()
+    end
+
+    randomized = true
+end
+
+function _G.random_number(min, max, count)
+    local ret = {}
+
+    for _ = 1, count do
+        ret[#ret+1] = math.random(min, max)
+    end
+end
+
+function _G.random_number_openssl(min, max, count)
+    local program = string.format("openssl rand %i", max)
+
+    local handle, errmsg = io.popen(program, "r")
+
+    if not handle then
+        print(errmsg)
+        return
+
+    end
+    
+    if handle then
+        local ret = handle:read("*a")
+
+        handle:close()
+
+        return ret
+    end
+
+    return ""
+end
+
+function _G.random_number_os(min, max, count)
+    local ret = {}
+
+    local program = string.format("shuf -i %d-%d -n %d", min, max, count)
+    local handle, errmsg = io.popen(program, "r")
+
+    if not handle then
+        print(errmsg)
+        return
+    end
+
+    local numbers
+
+    if handle then
+        numbers = handle:read("*a")
+        
+        handle:close()
+    end
+
+    return numbers
+
+    -- for _ = 1, count do
+    --     local os.execute("shuf -i " + min + "-" + max + " -n " + count)
+
+    --     ret[#ret+1] = os.exec
+    -- end
 end
 
 local function sanitize(t)

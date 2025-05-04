@@ -131,7 +131,7 @@ end
 function InteractionManager:add_global_command(command)
     local ok,err = client:createGlobalApplicationCommand(command:get_payload())
     if not ok then
-        errmsg(err)
+        errmsg("Trying to add a new global command, but it failed!\n"..err)
     end
 end
 
@@ -220,26 +220,26 @@ function InteractionManager:init()
                 ---@type Command
                 local command_obj = command()
 
-                if command_obj then
-                    if command_obj:get_global() then
-                        local cmd = self:get_global_command(command_obj)
+                -- if command_obj then
+                --     if command_obj:get_global() then
+                --         local cmd = self:get_global_command(command_obj)
 
-                        if cmd then
-                            self:edit_global_command(command_obj)
-                        else
-                            self:add_global_command(command_obj)
-                        end
-                    else
-                        for i, guild_id in ipairs(command_obj:get_guilds()) do
-                            -- self:add_command_to_guild(command_obj, guild_id)
-                        end
-                    end
+                --         if cmd then
+                --             self:edit_global_command(command_obj)
+                --         else
+                --             self:add_global_command(command_obj)
+                --         end
+                --     else
+                --         for i, guild_id in ipairs(command_obj:get_guilds()) do
+                --             -- self:add_command_to_guild(command_obj, guild_id)
+                --         end
+                --     end
 
-                    -- remove from dev channel if not set to dev
-                    if command_obj.is_testing and command_obj.is_global then
-                        self:remove_command_from_guild(command_obj, client:getGuild("531219831861805067"))
-                    end
-                end
+                --     -- remove from dev channel if not set to dev
+                --     if command_obj.is_testing and command_obj.is_global then
+                --         self:remove_command_from_guild(command_obj, client:getGuild("531219831861805067"))
+                --     end
+                -- end
             else
                 -- Error loading command!
                 errmsg("Error loading command!\n" .. errMsg)
@@ -319,6 +319,10 @@ function InteractionManager:process_component(int, data)
             end
         end
     end
+end
+
+function InteractionManager:get_command_interface(name)
+    return self._commands[name]
 end
 
 function InteractionManager:get_slash_command_from_data(data, args)

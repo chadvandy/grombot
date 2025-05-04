@@ -100,7 +100,6 @@ do
 end
 
 do
-    --- TODO move the edit functions into a Modal.
     local Edit = Command:add_subcommand("edit", "Edit a Macro.")
 
     Edit:set_callback(function (int, args)
@@ -115,7 +114,7 @@ do
         end
 
         if desc then
-            -- TODO convert \n into true new lines.
+            -- convert \n into true new lines.
             desc = desc:gsub("\\n", "\n")
             macro:set_field(desc)
         end
