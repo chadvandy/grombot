@@ -25,6 +25,11 @@ do
     WarnCommand:create_option("reason", "Reason for being warned")
                 :set_required(true)
                 :set_type("STRING")
+
+    WarnCommand:set_callback(function (int, args)
+        int:reply("Warning them!")
+    end)
+
 end
 
 do

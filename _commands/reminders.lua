@@ -118,32 +118,6 @@ local function post_reminder(reminder_data)
 	-- channel:send({content = auth_str, embed = embed})
 end
 
--- This is called through a timer in bot.lua, every few seconds
-function check_reminders()
-	-- print("checking reminders")
-	local t = saved_data.reminders
-	local new_t = {}
-
-	-- current time since epoch, UTC
-	local current_time = os.time()
-
-	for i = 1, #t do
-		local reminder_data = t[i]
-
-		-- printf("Current time %d, reminder time is %d", current_time, reminder_data.time)
-
-		if current_time >= reminder_data.time then
-			post_reminder(reminder_data)
-		else
-			new_t[#new_t+1] = reminder_data
-		end
-	end
-
-	-- remove the reminder from the saved_data table and override the json file
-	saved_data.reminders = new_t
-	save()
-end
-
 ---@param args table
 ---@param message Message
 local remindme = CM:new_command("remindme", function (message, args)
