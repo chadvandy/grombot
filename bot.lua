@@ -269,7 +269,7 @@ client:once('ready', function()
 	-- convert_saved_data()
 
 	-- prep all commands
-	CM:init()
+	-- CM:init()
 
 	other_stuff("reaction_roles")
 
@@ -413,78 +413,86 @@ local flypaper = {
 	killcount_string = "Current Kill Count: ",
 	logging_channel_id = "650311653388320778",
 }
-client:on('messageCreate',
-	---@param message Message
-	function(message)
-		if message.author.bot then
-			-- Don't allow the bot (or any) to use its own commands
-			return
-		end
 
-		local author = message.author
-		local channel = message.channel
+--- Ban someone who has posted a message within the
+--- flypaper channel.
+---@param message Message
+local function swat_fly(message)
+	-- Grab the message and get the current count of kills from it.
+	local channel = message.channel
+	local kill_count_msg = channel:getMessage(flypaper.messages.killcount_id)
+	local kill_count = tonumber((string.gsub(kill_count_msg.content, flypaper.killcount_string, "")))
+	if not kill_count then kill_count = 0 end
 
-		local user_id = author.id
-		local channel_id = channel.id
+	local guild = message.guild
+	local bug_member = message.member
 
-		if message.content:startswith(prefix) then
-			CM:message_created(message)
-			return
-		end
+	---@cast bug_member Member
+	---@cast guild Guild
 
-		-- Interception here to detect someone posting in the BotCatcher channel.
-		-- We'll swat em, then bring up the kill count by 1 and cheer.
-		if channel_id == flypaper.channel_id then
-			-- Grab the message and get the current count of kills from it.
-			local kill_count_msg = channel:getMessage(flypaper.messages.killcount_id)
-			local kill_count = tonumber((string.gsub(kill_count_msg.content, flypaper.killcount_string, "")))
-			if not kill_count then kill_count = 0 end
-
-			local guild = message.guild
-			local bug_member = message.member
-
-			---@cast bug_member Member
-			---@cast guild Guild
-
-			local grom_member = guild:getMember(client.user.id)
-			
-			
-			-- Increase the kill count and actually ban the goober.
-			if bug_member:hasRole("448858138565672990") then
-				-- pretend to ban
-				message:reply("I won't actually ban you, administrator.")
-			else
-				bug_member:ban("Bot stuck on the flypaper.")
-			end
-
-			---@type GuildTextChannel
-			local notify_channel = guild:getChannel(flypaper.logging_channel_id)
-			notify_channel:send("Bot swatted in the flypaper! Original message:")
-			notify_channel:send(message.content)
-
-			admin_operation_notify("Ban", bug_member, grom_member, "Flypaper!", nil, nil)
-
-			message:delete()
-					
-			kill_count = kill_count + 1
-			kill_count_msg:setContent(flypaper.killcount_string .. kill_count)
-		end
-
-
-		-- -- test if someone pinged Mixu in the Mixu channel.
-		-- if channel_id == "466624302897430530" and message.mentionedUsers:get("331428721556848641") then
-		-- 	local macro = discordia.storage.MacroManager:get_macro("PingMixu")
-
-		-- 	local response = channel:send {
-		-- 		content = macro:get_field(),
-		-- 		reference = {
-		-- 			message = message.id,
-		-- 			mention = false,
-		-- 		}
-		-- 	}
-		-- end
+	local grom_member = guild:getMember(client.user.id)
+	
+	-- Increase the kill count and actually ban the goober.
+	if bug_member:hasRole("448858138565672990") then
+		-- pretend to ban
+		message:reply("I won't actually ban you, administrator.")
+	else
+		bug_member:ban("Bot stuck on the flypaper.")
 	end
-)
+
+	---@type GuildTextChannel
+	local notify_channel = guild:getChannel(flypaper.logging_channel_id)
+	notify_channel:send("Bot swatted in the flypaper! Original message:")
+	notify_channel:send(message.content)
+
+	admin_operation_notify("Ban", bug_member, grom_member, "Flypaper!", nil, nil)
+
+	message:delete()
+			
+	kill_count = kill_count + 1
+	kill_count_msg:setContent(flypaper.killcount_string .. kill_count)
+end
+
+-- client:on('messageCreate',
+-- 	---@param message Message
+-- 	function(message)
+-- 		if message.author.bot then
+-- 			-- Don't allow the bot (or any) to use its own commands
+-- 			return
+-- 		end
+
+-- 		local author = message.author
+-- 		local channel = message.channel
+
+-- 		local user_id = author.id
+-- 		local channel_id = channel.id
+
+-- 		if message.content:startswith(prefix) then
+-- 			CM:message_created(message)
+-- 			return
+-- 		end
+
+-- 		-- Interception here to detect someone posting in the BotCatcher channel.
+-- 		-- We'll swat em, then bring up the kill count by 1 and cheer.
+-- 		if channel_id == flypaper.channel_id then
+-- 			swat_fly(message)
+-- 		end
+
+
+-- 		-- -- test if someone pinged Mixu in the Mixu channel.
+-- 		-- if channel_id == "466624302897430530" and message.mentionedUsers:get("331428721556848641") then
+-- 		-- 	local macro = discordia.storage.MacroManager:get_macro("PingMixu")
+
+-- 		-- 	local response = channel:send {
+-- 		-- 		content = macro:get_field(),
+-- 		-- 		reference = {
+-- 		-- 			message = message.id,
+-- 		-- 			mention = false,
+-- 		-- 		}
+-- 		-- 	}
+-- 		-- end
+-- 	end
+-- )
 
 
 local voice_role_id = "532011147948195860"

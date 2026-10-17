@@ -15,6 +15,16 @@ Command:set_moderator_only()
 
 do
     -- TODO ban / kick / delete / timeout / etc.
+
+    -- Warn the specified user with provided reason.
+    local WarnCommand  = Command:add_subcommand("warn", "Warn a member with specified reason.")
+    WarnCommand:create_option("user", "User to warn")
+                :set_required(true)
+                :set_type("USER")
+
+    WarnCommand:create_option("reason", "Reason for being warned")
+                :set_required(true)
+                :set_type("STRING")
 end
 
 do
