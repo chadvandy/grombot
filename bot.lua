@@ -546,4 +546,10 @@ client:on("voiceChannelLeave",
 	end
 )
 
-client:run('Bot ' .. tostring(FS.readFileSync(".token")))
+-- Get the token from the local .token file.
+local token = tostring(FS.readFileSync(".token"))
+
+-- Strip any whitespace out of the token's end or beginning.
+token = string.gsub(token, '^%s*(.-)%s*$', '%1')
+
+client:run(string.format("Bot %s", token))
