@@ -146,7 +146,7 @@ do
                :set_required(true)
                :set_type("STRING")
             
-    MuteCommand:create_option("duration", "How long to mute this user, formatted as [N] [[m]inutes|[h]ours|[d]ays] - e.g., '5 m' for 5 minutes, or '5 minutes'. If left blank, defaults to infinite.")
+    MuteCommand:create_option("duration", "Duration for the mute. `X[s/m/h/d]`, where X is a number. Default is infinite.")
                :set_required(false)
                :set_type("STRING")
 
@@ -253,7 +253,7 @@ do
               :set_required(false)
               :set_type("INTEGER")
 
-    BanCommand:create_option("duration", "Duration for the ban. Provide the duration in `Nx` format, where N is the number and x is s/m/h/d - e.g., 5m for 5 minutes. Leave blank for a permanent ban.")
+    BanCommand:create_option("duration", "Duration for the ban. `X[s/m/h/d]`, where X is a number. Default is infinite.")
               :set_required(false)
               :set_type("STRING")
 
