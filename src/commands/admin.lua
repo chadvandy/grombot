@@ -274,7 +274,7 @@ do
 
         local days_to_delete = args.delete_messages
         if is_number(days_to_delete) then
-            if days_to_delete < 0 | days_to_delete > 7 then
+            if days_to_delete < 0 or days_to_delete > 7 then
                 int:reply("Invalid value for delete_messages. Must be between 0 and 7.", true)
                 return
             end
