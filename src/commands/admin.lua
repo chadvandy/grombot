@@ -13,6 +13,108 @@ local Command = InteractionManager:new_command("admin", "Admin shit", "CHAT_INPU
 Command:set_global(true)
 Command:set_moderator_only()
 
+local mute_role_id = "650338854359924806"
+
+---comment
+---@param operation_type string
+---@param member Member
+---@param admin Member
+---@param reason string|nil
+---@param duration? any
+---@param message? Message
+function admin_operation_notify(operation_type, member, admin, reason, duration, message)
+	-- TODO type checking
+	local cnc_guild_id = "373745291289034763"
+	local logging_channel_id = "650311653388320778"
+
+	if type(reason) ~= "string" or reason == "" then
+		reason = "No reason provided."
+	end
+
+	local user = member.user
+
+	local operation_type_past = ""
+
+	if operation_type:sub(-1, -1) == "e" then
+		operation_type_past = operation_type .. "d"
+	elseif operation_type:find("ban") then
+		operation_type_past = operation_type .. "ned"
+	else
+		operation_type_past = operation_type .. "ed"
+	end
+
+	printf("operation type %s, past tense is %q", operation_type, operation_type_past)
+	printf("reason is %q", reason)
+
+	local guild = client:getGuild(cnc_guild_id)
+	local logging_channel = guild:getChannel(logging_channel_id)
+	
+	local title = "["..operation_type:upper().."] " .. user.tag
+	local avatar_url = user:getAvatarURL()
+
+	local embed = {
+		-- title = title,
+		author = {
+			name = title,
+			icon_url = avatar_url
+		},
+		-- image = {url = avatar_url},
+		fields = {
+			{name = "User", value = "<@"..user.id..">", inline = true},
+			-- {name = "User", value = user.id, inline = true}
+			{name = "Admin", value = "<@"..admin.id..">", inline = true},
+		}
+	}
+
+	-- if reason and reason ~= "" then
+		embed.fields[#embed.fields+1] = {name = "Reason", value = reason, inline = false}
+	-- end
+
+	-- duration is actually the end time in MS, so subtract it by os.time() to get the difference in MS
+	if duration then
+		-- duration = duration - os.time()
+		local duration_str = s_to_time_string(duration)
+
+		embed.fields[#embed.fields+1] = {name = "Duration", value = duration_str, inline = true}
+	end
+
+	if message then
+		-- send a message to the channel itself
+		do
+			local my_embed = {
+				author = {
+					name = user.tag .. " has been " .. operation_type_past,
+					icon_url = avatar_url,
+				},
+				fields = {
+					{name = "Reason: ", value = reason, inline = false},
+				},
+			}
+
+			if duration then
+				local duration_str = s_to_time_string(duration)
+		
+				my_embed.fields[#my_embed.fields+1] = {name = "Duration", value = tostring(duration_str), inline = true}
+			end
+
+			local ok, err = validate_embed(my_embed) 
+			if not ok then
+				errmsg(err)
+			else
+				local msg = message.channel:send({embed = my_embed})
+				embed.fields[#embed.fields+1] = {name = "Original Message", value = msg.link, inline = false}
+			end
+		end
+	end
+
+	local ok, err = validate_embed(embed)
+	if not ok then
+		return errmsg(err)
+	end
+	
+	logging_channel:send({embed = embed})
+end
+
 do
     -- TODO ban / kick / delete / timeout / etc.
 
@@ -27,9 +129,195 @@ do
                 :set_type("STRING")
 
     WarnCommand:set_callback(function (int, args)
-        int:reply("Warning them!")
+        int:reply("Warning them!", true)
+
+        local member = int._guild:getMember(args.user)
+        local admin = int._member
+
+        admin_operation_notify("warn", member, admin, args.reason)
     end)
 
+    local MuteCommand = Command:add_subcommand("mute", "Mute a member.")
+    MuteCommand:create_option("user", "User to mute")
+               :set_required(true)
+               :set_type("USER")
+
+    MuteCommand:create_option("reason", "Reason for being muted")
+               :set_required(true)
+               :set_type("STRING")
+            
+    MuteCommand:create_option("duration", "How long to mute this user, formatted as [N] [[m]inutes|[h]ours|[d]ays] - e.g., '5 m' for 5 minutes, or '5 minutes'. If left blank, defaults to infinite.")
+               :set_required(false)
+               :set_type("STRING")
+
+    MuteCommand:set_callback(function (int, args)
+        -- Confirm valid args.
+        -- The only one needing testing is the "duration" string.
+
+        local duration = nil
+        if is_string(args.duration) then
+            local err
+            duration, err = get_ms_from_time(args.duration)
+
+            if is_nil(duration) then
+                int:reply("Invalid format for duration.\n" .. err, true)
+                return
+            end
+        end
+
+        ---@type Member
+        local member = int._guild:getMember(args.user)
+
+        ---@type Member
+        local admin = int._member
+
+        -- member:mute()
+        member:addRole(mute_role_id)
+
+        if is_nil(duration) then
+            int:reply(string.format("%s muted!", member.name), true)
+        else
+            int:reply(string.format("%s muted for %s!", member.name, s_to_time_string(duration)), true)
+
+            local data = {
+                admin = admin.id,
+                victim = member.user.id,
+                reason = args.reason,
+                type = "mute",
+            }
+
+            saved_data.admin_table[#saved_data.admin_table+1] = data
+        end
+        
+        admin_operation_notify("mute", member, admin, args.reason, duration)
+    end)
+
+    local UnmuteCommand = Command:add_subcommand("unmute", "Unmute a user.")
+
+    UnmuteCommand:create_option("user", "User to unmute")
+                 :set_required(true)
+                 :set_type("USER")
+
+    UnmuteCommand:set_callback(function (int, args)
+        ---@type Member
+        local member = int._guild:getMember(args.user)
+        local admin = int._member
+
+        if member:hasRole(mute_role_id) then
+            member:removeRole(mute_role_id)
+
+            int:reply(string.format("Unmuted user %s", member.name), true)
+
+            admin_operation_notify("unmute", member, admin)
+        else
+            int:reply(string.format("%s is not muted!", member.name), true)
+        end
+    end)
+
+    local KickCommand = Command:add_subcommand("kick", "Kick a user.")
+
+    KickCommand:create_option("user", "User to kick")
+               :set_required(true)
+               :set_type("USER")
+
+    KickCommand:create_option("reason", "Reason for being kicked")
+               :set_required(true)
+               :set_type("STRING")
+
+    KickCommand:set_callback(function (int, args)
+        ---@type Member 
+        local member = int._guild:getMember(args.user)
+        local admin = int._member
+
+        local memberName = member.name
+        
+        local guild = int._guild
+        guild:kickUser(member.user, args.reason)
+        
+        int:reply(string.format("%s kicked.", memberName), true)
+
+        admin_operation_notify("kick", member, admin, args.reason)
+    end)
+
+    local BanCommand = Command:add_subcommand("ban", "Ban a user.")
+
+    BanCommand:create_option("user", "User to ban")
+              :set_required(true)
+              :set_type("USER")
+
+    BanCommand:create_option("reason", "Reason for being banned")
+              :set_required(true)
+              :set_type("STRING")
+
+    BanCommand:create_option("delete_messages", "Number between 0-7, for how many days worth of messages should be deleted. Defaults to 0.")
+              :set_required(false)
+              :set_type("INTEGER")
+
+    BanCommand:create_option("duration", "Duration for the ban. Provide the duration in `Nx` format, where N is the number and x is s/m/h/d - e.g., 5m for 5 minutes. Leave blank for a permanent ban.")
+              :set_required(false)
+              :set_type("STRING")
+
+    BanCommand:set_callback(function (int, args)
+        -- Confirm valid args.
+        -- Need to test the "duration" string and the "delete_messages" value.
+
+        local duration = nil
+        if is_string(args.duration) then
+            local err
+            duration, err = get_ms_from_time(args.duration)
+
+            if is_nil(duration) then
+                int:reply("Invalid format for duration.\n" .. err, true)
+                return
+            end
+        end
+
+        local days_to_delete = args.delete_messages
+        if is_number(days_to_delete) then
+            if days_to_delete < 0 | days_to_delete > 7 then
+                int:reply("Invalid value for delete_messages. Must be between 0 and 7.", true)
+                return
+            end
+        else
+            days_to_delete = 0
+        end
+
+        ---@type Member
+        local member = int._guild:getMember(args.user)
+
+        local memberName = member.name
+        local victimId = member.id
+
+        ---@type Member
+        local admin = int._member
+
+        ---@type Guild
+        local guild = int._guild
+
+        ---@type string
+        local reason = args.reason
+
+        -- member:mute()
+        guild:banUser(victimId, reason, days_to_delete)
+
+        if is_nil(duration) then
+            int:reply(string.format("%s banned!", memberName), true)
+        else
+            int:reply(string.format("%s banned for %s!", memberName, s_to_time_string(duration)), true)
+
+            local data = {
+                admin = admin.id,
+                victim = victimId,
+                reason = args.reason,
+                type = "ban",
+                time = os.time() + duration
+            }
+
+            saved_data.admin_table[#saved_data.admin_table+1] = data
+        end
+        
+        admin_operation_notify("ban", member, admin, reason, duration)
+    end)
 end
 
 do
