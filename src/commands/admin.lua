@@ -43,8 +43,8 @@ function admin_operation_notify(operation_type, member, admin, reason, duration,
 		operation_type_past = operation_type .. "ed"
 	end
 
-	printf("operation type %s, past tense is %q", operation_type, operation_type_past)
-	printf("reason is %q", reason)
+	print(string.format("operation type %s, past tense is %q", operation_type, operation_type_past))
+	print(string.format("reason is %q", reason))
 
 	local guild = client:getGuild(cnc_guild_id)
 	local logging_channel = guild:getChannel(logging_channel_id)
