@@ -21,8 +21,8 @@ local mute_role_id = "650338854359924806"
 ---@param admin Member
 ---@param reason string|nil
 ---@param duration? any
----@param message? Message
-function admin_operation_notify(operation_type, member, admin, reason, duration, message)
+---@param int? Interaction
+local function admin_operation_notify(operation_type, member, admin, reason, duration, int)
 	-- TODO type checking
 	local cnc_guild_id = "373745291289034763"
 	local logging_channel_id = "650311653388320778"
@@ -78,34 +78,36 @@ function admin_operation_notify(operation_type, member, admin, reason, duration,
 		embed.fields[#embed.fields+1] = {name = "Duration", value = duration_str, inline = true}
 	end
 
-	if message then
-		-- send a message to the channel itself
-		do
-			local my_embed = {
-				author = {
-					name = user.tag .. " has been " .. operation_type_past,
-					icon_url = avatar_url,
-				},
-				fields = {
-					{name = "Reason: ", value = reason, inline = false},
-				},
-			}
+    -- send a message to the request itself.
+    if int then
+        local my_embed = {
+            author = {
+                name = user.tag .. " has been " .. operation_type_past,
+                icon_url = avatar_url,
+            },
+            fields = {
+                {name = "Reason: ", value = reason, inline = false},
+            },
+        }
 
-			if duration then
-				local duration_str = s_to_time_string(duration)
-		
-				my_embed.fields[#my_embed.fields+1] = {name = "Duration", value = tostring(duration_str), inline = true}
-			end
+        if duration then
+            local duration_str = s_to_time_string(duration)
+    
+            my_embed.fields[#my_embed.fields+1] = {name = "Duration", value = tostring(duration_str), inline = true}
+        end
 
-			local ok, err = validate_embed(my_embed) 
-			if not ok then
-				errmsg(err)
-			else
-				local msg = message.channel:send({embed = my_embed})
-				embed.fields[#embed.fields+1] = {name = "Original Message", value = msg.link, inline = false}
-			end
-		end
-	end
+        local ok, err = validate_embed(my_embed) 
+        if not ok then
+            errmsg(err)
+        else
+            local msg = int:reply({embed = my_embed}, false);
+            -- local msg = message.channel:send({embed = my_embed})
+
+            if type(msg.link) ~= "nil" then
+                embed.fields[#embed.fields+1] = {name = "Original Message", value = msg.link, inline = false}
+            end
+        end
+    end
 
 	local ok, err = validate_embed(embed)
 	if not ok then
@@ -173,12 +175,12 @@ do
                 :set_type("STRING")
 
     WarnCommand:set_callback(function (int, args)
-        int:reply("Warning them!", true)
+        -- int:reply("Warning them!", true)
 
         local member = int._guild:getMember(args.user)
         local admin = int._member
 
-        admin_operation_notify("warn", member, admin, args.reason)
+        admin_operation_notify("warn", member, admin, args.reason, int)
     end)
 
     local MuteCommand = Command:add_subcommand("mute", "Mute a member.")
@@ -219,9 +221,9 @@ do
         member:addRole(mute_role_id)
 
         if is_nil(duration) then
-            int:reply(string.format("%s muted!", member.name), true)
+            -- int:reply(string.format("%s muted!", member.name), true)
         else
-            int:reply(string.format("%s muted for %s!", member.name, s_to_time_string(duration)), true)
+            -- int:reply(string.format("%s muted for %s!", member.name, s_to_time_string(duration)), true)
 
             local data = {
                 admin = admin.id,
@@ -233,7 +235,7 @@ do
             saved_data.admin_table[#saved_data.admin_table+1] = data
         end
         
-        admin_operation_notify("mute", member, admin, args.reason, duration)
+        admin_operation_notify("mute", member, admin, args.reason, duration, int)
     end)
 
     local UnmuteCommand = Command:add_subcommand("unmute", "Unmute a user.")
@@ -250,9 +252,9 @@ do
         if member:hasRole(mute_role_id) then
             member:removeRole(mute_role_id)
 
-            int:reply(string.format("Unmuted user %s", member.name), true)
+            -- int:reply(string.format("Unmuted user %s", member.name), true)
 
-            admin_operation_notify("unmute", member, admin)
+            admin_operation_notify("unmute", member, admin, nil, nil, int)
         else
             int:reply(string.format("%s is not muted!", member.name), true)
         end
@@ -278,9 +280,9 @@ do
         local guild = int._guild
         guild:kickUser(member.user, args.reason)
         
-        int:reply(string.format("%s kicked.", memberName), true)
+        -- int:reply(string.format("%s kicked.", memberName), true)
 
-        admin_operation_notify("kick", member, admin, args.reason)
+        admin_operation_notify("kick", member, admin, args.reason, nil, int)
     end)
 
     local BanCommand = Command:add_subcommand("ban", "Ban a user.")
@@ -345,9 +347,9 @@ do
         guild:banUser(victimId, reason, days_to_delete)
 
         if is_nil(duration) then
-            int:reply(string.format("%s banned!", memberName), true)
+            -- int:reply(string.format("%s banned!", memberName), true)
         else
-            int:reply(string.format("%s banned for %s!", memberName, s_to_time_string(duration)), true)
+            -- int:reply(string.format("%s banned for %s!", memberName, s_to_time_string(duration)), true)
 
             local data = {
                 admin = admin.id,
@@ -360,7 +362,7 @@ do
             saved_data.admin_table[#saved_data.admin_table+1] = data
         end
         
-        admin_operation_notify("ban", member, admin, reason, duration)
+        admin_operation_notify("ban", member, admin, reason, duration, int)
     end)
 end
 
