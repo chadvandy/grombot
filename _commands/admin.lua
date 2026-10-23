@@ -102,6 +102,106 @@ function s_to_time_string(ms)
 end
 
 ---comment
+---@param operation_type string
+---@param member Member
+---@param admin Member
+---@param reason string|nil
+---@param duration? any
+---@param message? Message
+local function admin_operation_notify(operation_type, member, admin, reason, duration, message)
+	-- TODO type checking
+	local cnc_guild_id = "373745291289034763"
+	local logging_channel_id = "650311653388320778"
+
+	if type(reason) ~= "string" or reason == "" then
+		reason = "No reason provided."
+	end
+
+	local user = member.user
+
+	local operation_type_past = ""
+
+	if operation_type:sub(-1, -1) == "e" then
+		operation_type_past = operation_type .. "d"
+	elseif operation_type:find("ban") then
+		operation_type_past = operation_type .. "ned"
+	else
+		operation_type_past = operation_type .. "ed"
+	end
+
+	print(string.format("operation type %s, past tense is %q", operation_type, operation_type_past))
+	print(string.format("reason is %q", reason))
+
+	local guild = client:getGuild(cnc_guild_id)
+	local logging_channel = guild:getChannel(logging_channel_id)
+	
+	local title = "["..operation_type:upper().."] " .. user.tag
+	local avatar_url = user:getAvatarURL()
+
+	local embed = {
+		-- title = title,
+		author = {
+			name = title,
+			icon_url = avatar_url
+		},
+		-- image = {url = avatar_url},
+		fields = {
+			{name = "User", value = "<@"..user.id..">", inline = true},
+			-- {name = "User", value = user.id, inline = true}
+			{name = "Admin", value = "<@"..admin.id..">", inline = true},
+		}
+	}
+
+	-- if reason and reason ~= "" then
+		embed.fields[#embed.fields+1] = {name = "Reason", value = reason, inline = false}
+	-- end
+
+	-- duration is actually the end time in MS, so subtract it by os.time() to get the difference in MS
+	if duration then
+		-- duration = duration - os.time()
+		local duration_str = s_to_time_string(duration)
+
+		embed.fields[#embed.fields+1] = {name = "Duration", value = duration_str, inline = true}
+	end
+
+	if message then
+		-- send a message to the channel itself
+		do
+			local my_embed = {
+				author = {
+					name = user.tag .. " has been " .. operation_type_past,
+					icon_url = avatar_url,
+				},
+				fields = {
+					{name = "Reason: ", value = reason, inline = false},
+				},
+			}
+
+			if duration then
+				local duration_str = s_to_time_string(duration)
+		
+				my_embed.fields[#my_embed.fields+1] = {name = "Duration", value = tostring(duration_str), inline = true}
+			end
+
+			local ok, err = validate_embed(my_embed) 
+			if not ok then
+				errmsg(err)
+			else
+				local msg = message.channel:send({embed = my_embed})
+				embed.fields[#embed.fields+1] = {name = "Original Message", value = msg.link, inline = false}
+			end
+		end
+	end
+
+	local ok, err = validate_embed(embed)
+	if not ok then
+		return errmsg(err)
+	end
+	
+	logging_channel:send({embed = embed})
+end
+
+---comment
 ---@param message Message
 local function arg_parser(message, args, get_time)
 	local admin = message.member
