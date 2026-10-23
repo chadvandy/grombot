@@ -351,7 +351,7 @@ end
 
 ---@param str string
 ---@vararg any
-function printf(str, ...)
+function _G.printf(str, ...)
 	local str, err = safe_format(str, ...)
 	print(str)
 	if err then errmsg(err) end
@@ -1138,6 +1138,50 @@ function send_embed(channel, embed)
 end
 
 _G.send_embed = send_embed
+
+function _G.s_to_time_string(ms)
+	local times = {
+		{
+			str = " days",
+			len = 86400,
+		},
+		{
+			str = " hours",
+			len = 3600,
+		},
+		{
+			str = " minutes",
+			len = 60,
+		},
+	}
+
+	local time_str = {}
+
+	for i = 1, #times do
+		local checked_time = times[i]
+		local str = checked_time.str
+		local len = checked_time.len
+
+		printf("testing s-to-string at%s", str)
+
+		if ms >= len then
+			printf("%ds is larger than%s (%d)", ms, str, len)
+			local num = math.floor(ms / len)
+			printf("Lasts %d%s", num, str)
+			ms = ms % len
+
+			-- chop off the "s"
+			if num == 1 then str = str:sub(1, -2) end
+
+			time_str[#time_str+1] = num .. str
+		end
+	end
+
+	if ms > 0 then time_str[#time_str+1] = ms .. " seconds." end
+
+	time_str = table.concat(time_str, ", ")
+	return time_str
+end
 
 function make_safe(fn)
 	if not type(fn) == "function" then
