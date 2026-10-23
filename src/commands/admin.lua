@@ -43,8 +43,8 @@ local function admin_operation_notify(operation_type, member, admin, reason, dur
 		operation_type_past = operation_type .. "ed"
 	end
 
-	print(string.format("operation type %s, past tense is %q", operation_type, operation_type_past))
-	print(string.format("reason is %q", reason))
+	-- print(string.format("operation type %s, past tense is %q", operation_type, operation_type_past))
+	-- print(string.format("reason is %q", reason))
 
 	local guild = client:getGuild(cnc_guild_id)
 	local logging_channel = guild:getChannel(logging_channel_id)
@@ -98,7 +98,7 @@ local function admin_operation_notify(operation_type, member, admin, reason, dur
 
         local ok, err = validate_embed(my_embed) 
         if not ok then
-            errmsg(err)
+            -- errmsg(err)
         else
             local msg = int:reply({embed = my_embed}, false);
             -- local msg = message.channel:send({embed = my_embed})
@@ -111,7 +111,7 @@ local function admin_operation_notify(operation_type, member, admin, reason, dur
 
 	local ok, err = validate_embed(embed)
 	if not ok then
-		return errmsg(err)
+		-- return errmsg(err)
 	end
 	
 	logging_channel:send({embed = embed})
@@ -120,7 +120,7 @@ end
 ---@param time_msg string
 local function get_ms_from_time(time_msg)
 	if not type(time_msg) == "string" then
-		printf("get_ms_from_time called with an invalid arg passed, %s", tostring(time_msg))
+		-- printf("get_ms_from_time called with an invalid arg passed, %s", tostring(time_msg))
 		return
 	end
 
@@ -131,7 +131,7 @@ local function get_ms_from_time(time_msg)
 		d = 86400,
 	}
 
-	printf("get ms from time %s", time_msg)
+	-- printf("get ms from time %s", time_msg)
 
 	local ms_delay = tonumber(string.sub(time_msg, 1, -2))
 	local time_tag = tostring(string.sub(time_msg, -1, -1))
@@ -152,11 +152,11 @@ local function get_ms_from_time(time_msg)
 		return nil, "The time tag passed, \"" ..time_tag .."\" is not a valid time tag! Only valid ones are s/m/h/d, for seconds/minutes/hours/days."
 	end
 
-	printf("ms_delay: %d\ntime_tag: %s", tonumber(ms_delay), tostring(time_tag))
+	-- printf("ms_delay: %d\ntime_tag: %s", tonumber(ms_delay), tostring(time_tag))
 
 	ms_delay = ms_delay * time_tags[time_tag]
 
-	printf("ms_delay: %d", ms_delay)
+	-- printf("ms_delay: %d", ms_delay)
 
 	return ms_delay
 end
