@@ -339,6 +339,9 @@ client:once('ready', function()
 		ready_functions[i]()
 	end
 
+	--local cmd = InteractionManager:get_command_interface("admin")
+	--InteractionManager:add_global_command(cmd)
+
 	print("Bot ready completed!")
 end)
 
