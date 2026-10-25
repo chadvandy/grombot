@@ -180,7 +180,7 @@ do
         local member = int._guild:getMember(args.user)
         local admin = int._member
 
-        admin_operation_notify("warn", member, admin, args.reason, int)
+        admin_operation_notify("warn", member, admin, args.reason, nil, int)
     end)
 
     local MuteCommand = Command:add_subcommand("mute", "Mute a member.")
