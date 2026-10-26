@@ -256,32 +256,6 @@ local function edit_reaction_msg()
 	-- channel:send({content="test", embed={title="Test"}})
 end
 
--- This is called through a timer in bot.lua, every few seconds
-function check_reminders()
-	-- print("checking reminders")
-	local t = saved_data.reminders
-	local new_t = {}
-
-	-- current time since epoch, UTC
-	local current_time = os.time()
-
-	for i = 1, #t do
-		local reminder_data = t[i]
-
-		-- printf("Current time %d, reminder time is %d", current_time, reminder_data.time)
-
-		if current_time >= reminder_data.time then
-			post_reminder(reminder_data)
-		else
-			new_t[#new_t+1] = reminder_data
-		end
-	end
-
-	-- remove the reminder from the saved_data table and override the json file
-	saved_data.reminders = new_t
-	save()
-end
-
 ---@type InteractionManager
 local InteractionManager = require("./src/interactions")
 
@@ -327,7 +301,8 @@ client:once('ready', function()
 	-- end
 
 	local fn = make_safe(function() 
-		-- check_reminders() check_admin() 
+		check_reminders()
+		check_admin()
 
 		end)
 

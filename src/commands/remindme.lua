@@ -54,6 +54,119 @@ local function are_any_not_nil(...)
     return false
 end
 
+local function post_reminder(reminder_data)
+	-- get deets from the reminder
+	local author_id = reminder_data.author_id
+	local guild_id = reminder_data.guild_id
+	local channel_id = reminder_data.channel_id
+	local message_id = reminder_data.message_id
+	local message_to_send = reminder_data.message
+
+	-- get the Discord objects
+	local guild = client:getGuild(guild_id)
+	local channel = guild:getChannel(channel_id)
+	local author = guild:getMember(author_id)
+
+	if not author then
+		-- error_msg
+		return
+	end
+
+	local auth_str = "⏰ <@"..author_id.."> ⏰\n"..message_to_send
+
+	local fields = {
+		{
+			name = "Re-Remind",
+			value = "Use 🕧 to be reminded again in 1h with the same message. Use 🔄 to be reminded again in 24h with the same message.",
+		},
+	}
+
+	if message_id then
+		local og_message = channel:getMessage(message_id)
+
+		if og_message then
+			fields[#fields+1] = {name = "Original Link", value = og_message.link}
+		end
+	end
+
+	local remind_again = false
+
+	local navigator = PM.new("reminder", channel)
+	navigator:set_fields(fields)
+
+	-- timer will last one hour!
+	navigator:set_timeout(3600000)
+	navigator:set_user(author_id) -- only the person who made it can use it!
+	navigator:set_reactions({
+		{
+			"🕧",
+			function(self, user_id)
+				remind_again = 3600
+				self:edit_field(1, {name = "One hour!", value = "You will get this reminder again in one hour!"})
+				self:goodbye()
+			end,
+		},
+		{
+			"🔄",
+			function(self, user_id)
+				remind_again = 86400
+				self:edit_field(1, {name = "One day!", value = "You will get this reminder again in one day!"})
+					self:goodbye()
+			end
+		},
+
+	})
+
+	navigator:add_close_callback(function(self)
+		if remind_again then
+			local new_reminder = reminder_data
+			new_reminder.time = reminder_data.time + remind_again
+
+			table.insert(saved_data.reminders, new_reminder)
+
+			-- self:edit_field(2, {name = "Re-reminder!", value = "I will reinform you in 24 hours!"})
+		end
+	end)
+
+	navigator:set_content(auth_str)
+
+	local ok = navigator:start()
+	if ok == false then
+		local new_reminder = reminder_data
+		new_reminder.time = reminder_data.time + 3600
+
+		table.insert(saved_data.reminders, new_reminder)
+	end
+
+	-- channel:send({content = auth_str, embed = embed})
+end
+
+-- This is called through a timer in bot.lua, every few seconds
+function _G.check_reminders()
+	-- print("checking reminders")
+	local t = saved_data.reminders
+	local new_t = {}
+
+	-- current time since epoch, UTC
+	local current_time = os.time()
+
+	for i = 1, #t do
+		local reminder_data = t[i]
+
+		-- printf("Current time %d, reminder time is %d", current_time, reminder_data.time)
+
+		if current_time >= reminder_data.time then
+			post_reminder(reminder_data)
+		else
+			new_t[#new_t+1] = reminder_data
+		end
+	end
+
+	-- remove the reminder from the saved_data table and override the json file
+	saved_data.reminders = new_t
+	save_data("reminders")
+end
+
 local function start_reminder() 
 
 end

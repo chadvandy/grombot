@@ -117,6 +117,58 @@ local function admin_operation_notify(operation_type, member, admin, reason, dur
 	logging_channel:send({embed = embed})
 end
 
+
+function _G.check_admin()
+	-- print("checking admin stuff")
+	local t = saved_data.admin_table
+	local new_t = {}
+
+	local current_time = os.time()
+
+	for i = 1, #t do
+		local data = t[i]
+
+		if current_time >= data.time then
+			local guild_id = data.guild_id
+			-- local channel_id = data.channel_id
+
+			local admin_id = data.admin
+			local user_id = data.victim
+
+			
+			local guild = client:getGuild(guild_id)
+			
+			printf("Trying to get user with ID %s", user_id)
+			local member = guild:getMember(user_id)
+			printf("Trying to get admin with I %s", admin_id)
+			local admin = guild:getMember(admin_id)
+
+			local punishment_type = data.type
+
+			if punishment_type == "mute" then
+				if not CLASS.isInstance(member, CLASS.classes.Member) then
+					-- not a member!
+					return
+				end
+
+				member:removeRole(mute_role_id)
+
+				admin_operation_notify("unmute", member, admin, "Mute timeout!", nil, nil)
+
+			elseif punishment_type == "ban" then
+				guild:unbanUser(user_id, "Temporary ban ended.")
+			end
+		else
+			new_t[#new_t+1] = data
+		end
+	end
+
+	-- remove the reminder from the saved_data table and override the json file
+	saved_data.admin_table = new_t
+
+    save_data("admin_table")
+end
+
 do
     -- ban / kick / delete / timeout / etc.
 
