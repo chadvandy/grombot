@@ -342,6 +342,9 @@ client:once('ready', function()
 	--local cmd = InteractionManager:get_command_interface("admin")
 	--InteractionManager:add_global_command(cmd)
 
+	local cmd = InteractionManager:get_command_interface("remindme")
+	InteractionManager:add_global_command(cmd)
+
 	print("Bot ready completed!")
 end)
 
