@@ -96,7 +96,9 @@ do
         local guild_id = int.guildId
 
         -- TODO Reply to the user.
-        local reply = int:reply("Reminder set! You will be informed in <t:" .. (duration) .. ":R>.")
+        local time = os.time() + duration
+
+        local reply = int:reply("Reminder set! You will be informed in <t:" .. (time) .. ":R>.")
 
         local reply_id = reply.id
         
@@ -107,7 +109,7 @@ do
             guild_id = guild_id,
             message_id = reply_id,
 
-            time = os.time() + duration
+            time = time
         }
 
         table.insert(saved_data.reminders, data)
