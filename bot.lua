@@ -344,6 +344,7 @@ client:once('ready', function()
 
 	local cmd = InteractionManager:get_command_interface("remindme")
 	InteractionManager:add_global_command(cmd)
+	InteractionManager:add_command_to_guild(cmd, "531219831861805067")
 
 	print("Bot ready completed!")
 end)
