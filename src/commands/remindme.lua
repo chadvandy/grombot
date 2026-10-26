@@ -96,7 +96,7 @@ do
         local guild_id = int.guildId
 
         -- TODO Reply to the user.
-        local reply = int:reply("Reminder set! You will be informed in " .. s_to_time_string(duration - os.time()))
+        local reply = int:reply("Reminder set! You will be informed in <t:" .. (duration) .. ":R>.")
 
         local reply_id = reply.id
         
@@ -111,6 +111,7 @@ do
         }
 
         table.insert(saved_data.reminders, data)
+        save()
     end)
 
     -- At:create_option("day", "The day to set the reminder for. Leave it blank to use the current day.")
