@@ -67,25 +67,71 @@ do
         :set_required(true)
         :set_type("STRING")
 
-    At:create_option("day", "The day to set the reminder for. Leave it blank to use the current day.")
-        :set_required(false)
-        :set_type("INTEGER")
+    At:create_option("when", "How long until you want your reminder. Format as `X[s/m/h/d]`.")
+        :set_required(true)
+        :set_type("STRING")
 
-    At:create_option("month", "The month to set the reminder for. Leave it blank to use the current month.")
-        :set_required(false)
-        :set_type("INTEGER")
+    At:set_callback(function (int, args)
 
-    At:create_option("year", "The year to set the reminder for. Leave it blank to use the current year.")
-        :set_required(false)
-        :set_type("INTEGER")
+        local duration, err = get_ms_from_time(args.when)
+        if is_nil(duration) then
+            int:reply("Invalid format for duration.\n" .. err, true)
+            return
+        end
 
-    At:create_option("hour", "The hour to set the reminder for. Leave it blank to use the current hour.")
-        :set_required(false)
-        :set_type("INTEGER")
+        -- TODO Add the details to the reminders data table.
+        -- message;
+        -- message_id; [original message] (needs to be reworked to handle int:reply!)
+        -- author_id;
+        -- channel_id;
+        -- guild_id;
+        -- time; (in UTC).
+
+        -- The actual text of the reminder.
+        local message = args.message
+
+        local user = int.user
+        local author_id = user.id
+        local channel_id = int.channelId
+        local guild_id = int.guildId
+
+        -- TODO Reply to the user.
+        local reply = int:reply("Reminder set! You will be informed in " .. s_to_time_string(args.when - os.time()))
+
+        local reply_id = reply.id
+        
+        local data = {
+            message = message,
+            author_id = author_id,
+            channel_id = channel_id,
+            guild_id = guild_id,
+            message_id = reply_id,
+
+            time = os.time() + duration
+        }
+
+        table.insert(saved_data.reminders, data)
+    end)
+
+    -- At:create_option("day", "The day to set the reminder for. Leave it blank to use the current day.")
+    --     :set_required(false)
+    --     :set_type("INTEGER")
+
+    -- At:create_option("month", "The month to set the reminder for. Leave it blank to use the current month.")
+    --     :set_required(false)
+    --     :set_type("INTEGER")
+
+    -- At:create_option("year", "The year to set the reminder for. Leave it blank to use the current year.")
+    --     :set_required(false)
+    --     :set_type("INTEGER")
+
+    -- At:create_option("hour", "The hour to set the reminder for. Leave it blank to use the current hour.")
+    --     :set_required(false)
+    --     :set_type("INTEGER")
     
-    At:create_option("minute", "The minute to set the reminder for. Leave it blank to use the current minute.")
-        :set_required(false)
-        :set_type("INTEGER")
+    -- At:create_option("minute", "The minute to set the reminder for. Leave it blank to use the current minute.")
+    --     :set_required(false)
+    --     :set_type("INTEGER")
 
     -- At:set_callback(function(int, args) 
         -- TODO Confirms args
@@ -153,7 +199,7 @@ do
 
         if not are_any_not_nil(h, m, s, yr, mn, dy) then
             -- Inform the user that they need to use at least one time-based option!
-            int:reply("You need to supply at least one time argument! (ie. hours, minutes, seconds, etc.)")
+            int:reply("You need to supply at least one time argument! (ie. hours, minutes, seconds, etc.)", true)
             return
         end
 

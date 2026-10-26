@@ -117,52 +117,8 @@ local function admin_operation_notify(operation_type, member, admin, reason, dur
 	logging_channel:send({embed = embed})
 end
 
----@param time_msg string
-local function get_ms_from_time(time_msg)
-	if not type(time_msg) == "string" then
-		-- printf("get_ms_from_time called with an invalid arg passed, %s", tostring(time_msg))
-		return
-	end
-
-	local time_tags = {
-		s = 1,
-		m = 60,
-		h = 3600,
-		d = 86400,
-	}
-
-	-- printf("get ms from time %s", time_msg)
-
-	local ms_delay = tonumber(string.sub(time_msg, 1, -2))
-	local time_tag = tostring(string.sub(time_msg, -1, -1))
-	if not is_number(ms_delay) and (not is_string(time_tag) or not time_tags[time_tag]) then
-		return false, "You have to pass in a time string, ie. `5s`, where 5 is the number and s is the time tag. Valid time tags are s/m/h/d, for seconds/minutes/hours/days."
-	end
-
-	if not is_number(ms_delay) then
-		return nil, "You have to pass a number to the time-string, ie. `5s`, where 5 is the number!"
-	end
-
-	-- get the s/m/h/d tag
-	if not is_string(time_tag) then
-		return nil, "You have to pass a time tag to the time-string, ie. `5s`, where s is the time tag! Valid time tags are s/m/h/d, for seconds/minutes/hours/days."
-	end
-
-	if not time_tags[time_tag] then
-		return nil, "The time tag passed, \"" ..time_tag .."\" is not a valid time tag! Only valid ones are s/m/h/d, for seconds/minutes/hours/days."
-	end
-
-	-- printf("ms_delay: %d\ntime_tag: %s", tonumber(ms_delay), tostring(time_tag))
-
-	ms_delay = ms_delay * time_tags[time_tag]
-
-	-- printf("ms_delay: %d", ms_delay)
-
-	return ms_delay
-end
-
 do
-    -- TODO ban / kick / delete / timeout / etc.
+    -- ban / kick / delete / timeout / etc.
 
     -- Warn the specified user with provided reason.
     local WarnCommand  = Command:add_subcommand("warn", "Warn a member with specified reason.")
@@ -506,8 +462,153 @@ do
     end
 end
 
--- Command:set_callback(function (int, args)
---     int:reply("Admin shit!")
+
+-- TODO Add in remaining admin commands.
+-- -- delete messages
+-- -- arg1: num messages (?)
+-- -- arg2: user mention (?)
+-- -- arg3: channel mention (?)
+-- local delete = CM:new_command(
+-- 	"delete", 
+-- 	---@param args table
+-- 	---@param message Message
+-- 	function (message, args)
+-- 		print("Doing a delete")
+-- 		---@type string
+-- 		local user = args.user
+
+-- 		---@type GuildTextChannel
+-- 		local channel = args.channel
+
+-- 		---@type number
+-- 		local num_messages = args.num_messages
+
+-- 		local og_channel = message.channel
+
+-- 		printf("Deleting %d messages in channel %q for user", num_messages, channel.name or channel.id, tostring(user))
+
+-- 		-- TODO use cached shit?
+-- 		local messages
+		
+-- 		if user then
+-- 			messages = channel:getMessagesBefore(message.id, 50)
+-- 		else
+-- 			messages = channel:getMessagesBefore(message.id, num_messages)
+-- 		end
+		
+-- 		local msg_array = messages:toArray("timestamp")
+
+-- 		local num_deleted = 0
+
+-- 		local bulk = {}
+
+-- 		for i = #msg_array, 1, -1 do
+-- 			if num_deleted == num_messages then break end
+-- 			---@type Message
+-- 			local msg = msg_array[i]
+
+-- 			if user then
+-- 				if msg.author.id == user then
+-- 					-- msg:delete()
+-- 					bulk[#bulk+1] = msg.id
+-- 					num_deleted = num_deleted+1
+-- 				end
+-- 			else
+-- 				-- msg:delete()
+-- 				bulk[#bulk+1] = msg.id
+-- 				num_deleted = num_deleted+1
+-- 			end
+-- 		end
+
+-- 		local actual = #bulk
+-- 		channel:bulkDelete(bulk)
+
+-- 		message:delete()
+-- 		-- og_channel:send("Deleted "..tostring(actual).." messages!")
+-- 	end
+
+-- )
+-- delete:set_name("Delete Messages")
+-- delete:set_description("Delete a number of messages within this channel. If no number is provided, it defaults to 5. Optionally specify a channel and/or a user to delete messages from.")
+-- delete:set_usage("`%sdelete 5 @User #channel_name`. All args are optional, but must be in that order. You can use `#all` as the final argument, but a user must be provided in that case. It will only delete a maximum of 50 messages at a time, as a safety measure, but I'll probably eventually bump that up.")
+-- delete:set_validity_check(is_admin)
+-- ---@param message Message
+-- delete:set_argument_parser(function(message, args)
+-- 	local num_messages = tonumber(args[1])
+-- 	if not num_messages then
+-- 		num_messages = 5
+
+-- 		-- TODO determine what args1 is!
+-- 	else
+-- 		num_messages = math.clamp(num_messages, 1, 50)
+-- 	end
+
+-- 	local channel = message.channel
+-- 	local mentionedChannels = message.mentionedChannels
+
+-- 	if mentionedChannels and mentionedChannels.first then
+-- 		channel = mentionedChannels.first
+-- 	end
+
+-- 	---@type User
+-- 	local user
+-- 	local mentionedUsers = message.mentionedUsers
+
+-- 	if mentionedUsers and mentionedUsers.first then
+-- 		user = mentionedUsers.first.id
+-- 	end
+
+-- 	-- TODO allow for a #all call
+
+-- 	printf("User found %q", tostring(user))
+
+-- 	return {
+-- 		user = user,
+-- 		channel = channel,
+-- 		num_messages = num_messages
+-- 	}
+
+-- 	-- return arg_parser(message, 2)
 -- end)
+-- delete:set_trigger("message", "delete")
+-- delete:set_category("Admin")
+
+-- -- Grom Write for me only
+-- -- arg1: channel (?)
+-- -- arg2+: message
+-- ---@param args table
+-- ---@param message Message
+-- local write = CM:new_command("grom_write", function (message, args)
+-- 	print("Doing a Grom write!")
+-- 	message:delete()
+
+-- 	local channel = args.channel
+-- 	local msg = args.message
+
+-- 	channel:send(msg)
+-- end)
+-- write:set_name("Grom Write")
+-- write:set_description("Make Grom send a message, to an optionally specified channel. If no channel specified, it'll post it right into this channel. This admin command is immediately deleted after sending!")
+-- write:set_usage("`%sgrom_write #channel Grom is fuckin' watching you.`, using the mention functionality for channel. Channel optional.")
+-- write:set_validity_check(is_admin)
+-- ---@type Message
+-- write:set_argument_parser(function(message, args)
+-- 	local channel = message.channel
+-- 	if message.mentionedChannels and message.mentionedChannels.first then
+-- 		channel = message.mentionedChannels.first
+-- 		table.remove(args, 1)
+-- 	end
+
+-- 	local msg = table.concat(args, " ")
+
+-- 	return {
+-- 		channel = channel,
+-- 		message = msg
+-- 	}
+
+-- 	-- return arg_parser(message, 2)
+-- end)
+-- write:set_trigger("message", "grom_write")
+-- write:set_category("Admin")
 
 return Command
