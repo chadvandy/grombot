@@ -61,17 +61,17 @@ end
 -- TODO Localise the time to the user's used time zone?
     -- Need to have a specific set-timezone command for users, if they don't want to use GMT.
 do
-    local At = Command:add_subcommand("at", "Set a reminder for a specified date/time. Time is based off of GMT!")
+    local In = Command:add_subcommand("in", "Set a reminder for a specified date/time. Time is based off of GMT!")
     
-    At:create_option("message", "The message to send when the reminder is triggered.")
+    In:create_option("message", "The message to send when the reminder is triggered.")
         :set_required(true)
         :set_type("STRING")
 
-    At:create_option("when", "How long until you want your reminder. Format as `X[s/m/h/d]`.")
+    In:create_option("when", "How long until you want your reminder. Format as `X[s/m/h/d]`.")
         :set_required(true)
         :set_type("STRING")
 
-    At:set_callback(function (int, args)
+    In:set_callback(function (int, args)
 
         local duration, err = get_ms_from_time(args.when)
         if is_nil(duration) then
@@ -144,94 +144,94 @@ do
 end
 
 do
-    local In = Command:add_subcommand("in", "Set a reminder to trigger in a certain amount of time.")
+    -- local In = Command:add_subcommand("in", "Set a reminder to trigger in a certain amount of time.")
 
-    In:create_option(_message, "The message to send yourself later.")
-        :set_required(true)
-        :set_type(_str)
+    -- In:create_option(_message, "The message to send yourself later.")
+    --     :set_required(true)
+    --     :set_type(_str)
 
-    -- Send type (private, hidden, or public)
+    -- -- Send type (private, hidden, or public)
 
-    -- Reference original message?
+    -- -- Reference original message?
 
-    -- Hours
-    In:create_option(_h, sf(in_msg, _hs))
-        :set_required(false)
-        :set_type(_int)
+    -- -- Hours
+    -- In:create_option(_h, sf(in_msg, _hs))
+    --     :set_required(false)
+    --     :set_type(_int)
 
-    -- Minutes
-    In:create_option(_m, sf(in_msg, _ms))
-        :set_required(false)
-        :set_type(_int)
+    -- -- Minutes
+    -- In:create_option(_m, sf(in_msg, _ms))
+    --     :set_required(false)
+    --     :set_type(_int)
 
-    -- Seconds
-    In:create_option(_s, sf(in_msg, _ss))
-        :set_required(false)
-        :set_type(_int)
+    -- -- Seconds
+    -- In:create_option(_s, sf(in_msg, _ss))
+    --     :set_required(false)
+    --     :set_type(_int)
 
-    -- Days
-    In:create_option(_d, sf(in_msg, _ds))
-        :set_required(false)
-        :set_type(_int)
+    -- -- Days
+    -- In:create_option(_d, sf(in_msg, _ds))
+    --     :set_required(false)
+    --     :set_type(_int)
 
-    -- Months
-    In:create_option(_mn, sf(in_msg, _mns))
-        :set_required(false)
-        :set_type(_int)
+    -- -- Months
+    -- In:create_option(_mn, sf(in_msg, _mns))
+    --     :set_required(false)
+    --     :set_type(_int)
 
-    -- Years
-    In:create_option(_y, sf(in_msg, _ys))
-        :set_required(false)
-        :set_type(_int)
+    -- -- Years
+    -- In:create_option(_y, sf(in_msg, _ys))
+    --     :set_required(false)
+    --     :set_type(_int)
 
-    -- Handle responding to a "remindme in" command.
-    In:set_callback(function (int, args)
-        -- Get the user who sent this request.  
-        local user = int.user
+    -- -- Handle responding to a "remindme in" command.
+    -- In:set_callback(function (int, args)
+    --     -- Get the user who sent this request.  
+    --     local user = int.user
 
-        -- user:send("Hey dude I got your message.")
+    --     -- user:send("Hey dude I got your message.")
 
-        -- TODO confirm that this user exists?
+    --     -- TODO confirm that this user exists?
 
-        -- Confirm that at least one of the time-based options was used.
-        local ok, err = pcall(function() 
-        local h,m,s,yr,mn,dy = args[_h], args[_m], args[_s], args[_y], args[_mn], args[_d]
+    --     -- Confirm that at least one of the time-based options was used.
+    --     local ok, err = pcall(function() 
+    --     local h,m,s,yr,mn,dy = args[_h], args[_m], args[_s], args[_y], args[_mn], args[_d]
 
-        if not are_any_not_nil(h, m, s, yr, mn, dy) then
-            -- Inform the user that they need to use at least one time-based option!
-            int:reply("You need to supply at least one time argument! (ie. hours, minutes, seconds, etc.)", true)
-            return
-        end
+    --     if not are_any_not_nil(h, m, s, yr, mn, dy) then
+    --         -- Inform the user that they need to use at least one time-based option!
+    --         int:reply("You need to supply at least one time argument! (ie. hours, minutes, seconds, etc.)", true)
+    --         return
+    --     end
 
-        -- Force convert each of the numerical inputs into a 0 value if they're nil,
-        -- to prevent any script breaks below (and simplify the code)
-        h,m,s,yr,mn,dy = h or 0, m or 0, s or 0, yr or 0, mn or 0, dy or 0
+    --     -- Force convert each of the numerical inputs into a 0 value if they're nil,
+    --     -- to prevent any script breaks below (and simplify the code)
+    --     h,m,s,yr,mn,dy = h or 0, m or 0, s or 0, yr or 0, mn or 0, dy or 0
 
-        -- Save the details of the reminder in our internal data.
-        local msg = args[_message]
+    --     -- Save the details of the reminder in our internal data.
+    --     local msg = args[_message]
 
-        -- Get the current time to build the offset time from the provided values.
-        ---@type Date
-        local now = discordia.Date()
-        local now_s = now:toSeconds()
-        local due_s = now_s + (s) + (m * 60)
-                    + (h * 60 * 60)
-                    + (dy * 60 * 60 * 24)
-                    -- + (yr * 60 * 60 * 24 * 365)
-        -- ---@type Date
-        -- local due = discordia.Date(due_s)
+    --     -- Get the current time to build the offset time from the provided values.
+    --     ---@type Date
+    --     local now = discordia.Date()
+    --     local now_s = now:toSeconds()
+    --     local due_s = now_s + (s) + (m * 60)
+    --                 + (h * 60 * 60)
+    --                 + (dy * 60 * 60 * 24)
+    --                 -- + (yr * 60 * 60 * 24 * 365)
+    --     -- ---@type Date
+    --     -- local due = discordia.Date(due_s)
 
-        -- TODO Handle year and month!
+    --     -- TODO Handle year and month!
 
-        -- TODO Save the data within Gromby's internals.
+    --     -- TODO Save the data within Gromby's internals.
 
-        -- Inform the user that the reminder has been set, and send a time-formatted
-        -- response to let them know when it will be sent, w/ the ability to cancel
-        -- or edit it via message components.
-        int:reply("You will be reminded at <t:" .. due_s .. ">!")
+    --     -- Inform the user that the reminder has been set, and send a time-formatted
+    --     -- response to let them know when it will be sent, w/ the ability to cancel
+    --     -- or edit it via message components.
+    --     int:reply("You will be reminded at <t:" .. due_s .. ">!")
 
-        end) if not ok then int:reply(err) end
-    end)
+    --     end) if not ok then int:reply(err) end
+    -- end)
 end
 
 return Command
