@@ -96,7 +96,7 @@ do
         local guild_id = int.guildId
 
         -- TODO Reply to the user.
-        local reply = int:reply("Reminder set! You will be informed in " .. s_to_time_string(args.when - os.time()))
+        local reply = int:reply("Reminder set! You will be informed in " .. s_to_time_string(duration - os.time()))
 
         local reply_id = reply.id
         
