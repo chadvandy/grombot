@@ -238,6 +238,9 @@ function Nav:init_listeners()
         ---@param data table
         ---@param values table<string, any>?
         function(iInt, data, values)
+            printf("Component interaction detected!")
+
+
             -- Only listening for this one message!
             if iInt.message.id ~= self._msg_id then
                 return
