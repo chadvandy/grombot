@@ -62,7 +62,11 @@ do
     Search:set_callback(function (int, args)
         local macro = MacroManager:get_macro(args.name)
 
-        int:reply(macro.field)
+        if is_nil(macro) then
+            int:reply("Error! Can't find macro with name [".. args.name .. "]!")
+        else
+            int:reply(macro.field)
+        end
     end)
 end
 
