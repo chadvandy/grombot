@@ -4,6 +4,9 @@ local IM = discordia.storage.InteractionManager
 local typing = require("type_checking")
 local is_boolean,is_string,is_function,is_number,is_nil,is_table,is_userdata = typing.is_boolean, typing.is_string, typing.is_function, typing.is_number, typing.is_nil, typing.is_table, typing.is_userdata
 
+local InteractionType = discordia.enums.interactionType
+
+
 ---@class Navigation
 local defaults = {
     _user = nil,
@@ -232,6 +235,44 @@ end
 --- TODO "stop" prompt
 --- TODO close out a nav if it's not found 
 function Nav:init_listeners()
+    discordia.storage.client:on(
+        "interactionCreate",
+        ---@param int Interaction
+        function(int)
+            -- Confirm that the interaction is on this message.
+            if int.type ~= InteractionType.messageComponent then
+                return
+            end
+
+            if int.message.id ~= self._msg_id then
+                return
+            end
+
+            --- If we have a user set, we need to restrict access.
+            if self._user and int.user.id ~= self._user then
+                -- Refreshing so we still register the interaction.
+                return self:refresh(int)
+            end
+
+            local data = int._data
+            local cId = data.custom_id
+
+            if cId then
+
+                if cId == "previous_page" then
+                    self:set_page(self._current_page - 1)
+                elseif cId == "next_page" then
+                    self:set_page(self._current_page + 1)
+                elseif cId == "stop_navigation" then
+                    -- TODO close out of the navigation prompt.
+                end
+
+                self:refresh(int)
+            end
+        end
+    )
+
+
     discordia.storage.client:on(
         "messageComponentInteraction",
         ---@param iInt Interaction

@@ -391,21 +391,23 @@ client:on(
 	end
 )
 
-client:on(
-	"messageComponentInteraction",
-	---@param int Interaction
-	---@param data table
-	---@param values table<string, any>?
-	function(int, data, values)
-		local custom_id = data.custom_id
+-- client:on(
+-- 	"messageComponentInteraction",
+-- 	---@param int Interaction
+-- 	---@param data table
+-- 	---@param values table<string, any>?
+-- 	function(int, data, values)
+-- 		local custom_id = data.custom_id
 
-		print("Message component interaction detected in bot.lua!")
+-- 		print("Message component interaction detected in bot.lua!")
 
-		if custom_id then
-			InteractionManager:process_component(int, data)
-		end
-	end
-)
+-- 		if custom_id then
+-- 			InteractionManager:process_component(int, data)
+-- 		end
+-- 	end
+-- )
+
+-- TODO Respond to all "interactionCreate" events.
 
 client:on(
 	"userCommand",
