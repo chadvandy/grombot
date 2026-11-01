@@ -399,6 +399,8 @@ client:on(
 	function(int, data, values)
 		local custom_id = data.custom_id
 
+		print("Message component interaction detected in bot.lua!")
+
 		if custom_id then
 			InteractionManager:process_component(int, data)
 		end
